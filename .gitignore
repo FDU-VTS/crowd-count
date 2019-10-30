@@ -1,0 +1,11 @@
+*.pyc
+__pycache__
+*.idea
+*.DS_Store
+*.gz
+*.xml
+*.pkl
+alex_model.pkl
+crowd_count/data/dataset
+mall_dataset
+*.tar
