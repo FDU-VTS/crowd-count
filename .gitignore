@@ -6,6 +6,12 @@ __pycache__
 *.xml
 *.pkl
 alex_model.pkl
-crowd_count/data/dataset
 mall_dataset
 *.tar
+exp
+./exp
+*.h5
+*.jpg
+*.csv
+*.npy
+

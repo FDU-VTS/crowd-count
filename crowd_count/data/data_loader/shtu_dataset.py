@@ -16,12 +16,12 @@ class ShanghaiTechDataset(Dataset):
                  both_transform=None,):
         self.root = {
             "a": {
-                "train": "crowd_count/data/datasets/shtu_dataset/part_A_final/train_data/",
-                "test": "crowd_count/data/datasets/shtu_dataset/part_A_final/test_data/",
+                "train": "./crowd_count/data/datasets/shtu_dataset/part_A_final/train_data/",
+                "test": "./crowd_count/data/datasets/shtu_dataset/part_A_final/test_data/",
             },
             "b": {
-                "train": "crowd_count/data/datasets/shtu_dataset/part_B_final/train_data/",
-                "test": "crowd_count/data/datasets/shtu_dataset/part_B_final/test_data/",
+                "train": "./crowd_count/data/datasets/shtu_dataset/part_B_final/train_data/",
+                "test": "./crowd_count/data/datasets/shtu_dataset/part_B_final/test_data/",
             }
         }[part][mode]
         self.paths = glob.glob(self.root + "images/*.jpg")

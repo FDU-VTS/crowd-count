@@ -1,42 +1,51 @@
 import torch.nn as nn
 from torchvision import models
+from .network import Conv2d
 import torch.nn.functional as F
-from crowd_count.models.network import ConvUnit
 
-__all__ = ["Res101"]
 
 class Res101(nn.Module):
     def __init__(self, pretrained=True):
         super(Res101, self).__init__()
-        self.de_pred = nn.Sequential(
-            ConvUnit(1024, 128, 1),
-            nn.Conv2d(128, 1, kernel_size=1, stride=1)
-        )
-        self.own_reslayer_3 = make_res_layer(Bottleneck, 256, 23, stride=1)
+
+        self.de_pred = nn.Sequential(Conv2d(1024, 128, 1, same_padding=True, NL='relu'),
+                                     Conv2d(128, 1, 1, same_padding=True, NL='relu'))
         res = models.resnet101(pretrained=pretrained)
+
         self.frontend = nn.Sequential(
             res.conv1, res.bn1, res.relu, res.maxpool, res.layer1, res.layer2
         )
+        self.own_reslayer_3 = make_res_layer(Bottleneck, 256, 23, stride=1)
         self.own_reslayer_3.load_state_dict(res.layer3.state_dict())
 
-    def forward(self, x):
+    def forward(self,x):
         x = self.frontend(x)
         x = self.own_reslayer_3(x)
         x = self.de_pred(x)
-        x = F.upsample(x, scale_factor=8)
+        x = F.upsample(x,scale_factor=8)
+
         return x
+
+    def _initialize_weights(self):
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                m.weight.data.normal_(0.0, std=0.01)
+                if m.bias is not None:
+                    m.bias.data.fill_(0)
+            elif isinstance(m, nn.BatchNorm2d):
+                m.weight.fill_(1)
+                m.bias.data.fill_(0)
 
 
 def make_res_layer(block, planes, blocks, stride=1):
     downsample = None
-    inplanes = 512
+    inplanes=512
     if stride != 1 or inplanes != planes * block.expansion:
         downsample = nn.Sequential(
             nn.Conv2d(inplanes, planes * block.expansion,
                       kernel_size=1, stride=stride, bias=False),
             nn.BatchNorm2d(planes * block.expansion),
         )
-
     layers = []
     layers.append(block(inplanes, planes, stride, downsample))
     inplanes = planes * block.expansion
