@@ -14,4 +14,4 @@ exp
 *.jpg
 *.csv
 *.npy
-
+crowd_count/data/datasets/*
