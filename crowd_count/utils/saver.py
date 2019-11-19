@@ -14,7 +14,7 @@ class Saver:
         path (string, optional): The directory you want to save to. The default is None,
             and the sys will create a directory called "./exp" automatically.
     """
-    def __init__(self, mode="replace", path=None):
+    def __init__(self, mode="remain", path=None):
         self.mode = mode
         self.path = path
         if self.path is None:
@@ -26,6 +26,6 @@ class Saver:
 
     def save(self, model, name):
         if self.mode == "replace":
-            torch.save(model.state_dict(), os.path.join(self.path, "{0}_best_model.pt".format(name)))
+            torch.save(model.state_dict(), "best_model.pt")
         elif self.mode == "remain":
             torch.save(model.state_dict(), os.path.join(self.path, "{0}.pt".format(name)))

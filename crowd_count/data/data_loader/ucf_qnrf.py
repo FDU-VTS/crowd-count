@@ -3,21 +3,25 @@
 
 from torch.utils.data import Dataset
 import glob
-import cv2
 import numpy as np
 import h5py
 import skimage.io
 import skimage.color
 import skimage.transform
+from tqdm import tqdm
+
 
 class UCFQNRF(Dataset):
 
-    def __init__(self, mode="train", **kwargs):
-        self.root = "../data/UCF-QNRF_ECCV18/Train/" if mode == "train" else \
-                "../data/UCF-QNRF_ECCV18/Test/"
+    def __init__(self, mode="train", img_transform=None, gt_transform=None, both_transform=None):
+        self.mode = mode
+        self.root = "./crowd_count/data/datasets/UCF-QNRF_ECCV18/Train/" if mode == "train" else \
+                "./crowd_count/data/datasets/UCF-QNRF_ECCV18/Test/"
         self.paths = glob.glob(self.root + "*.jpg")
-        self.transform = kwargs['transform']
         self.length = len(self.paths)
+        self.img_transform = img_transform
+        self.gt_transform = gt_transform
+        self.both_transform = both_transform
         self.dataset = self.load_data()
 
     def __len__(self):
@@ -25,88 +29,46 @@ class UCFQNRF(Dataset):
 
     def __getitem__(self, item):
         img, den = self.dataset[item]
-        results = []
-        h, w, _ = img.shape
-        h_crop = h // 4
-        w_crop = w // 4
-        for i in range(4):
-            for j in range(4):
-                img_crop = img[h_crop * i: h_crop * (i + 1), w_crop * j: w_crop * (j + 1), :]
-                img_crop = cv2.resize(img_crop, (img_crop.shape[1] // 8 * 8, img_crop.shape[0] // 8 * 8), interpolation=cv2.INTER_CUBIC)
-                img_crop = self.transform(img_crop)
-                den_crop = den[h_crop * i: h_crop * (i + 1), w_crop * j: w_crop * (j + 1)]
-                h_trans = den_crop.shape[0] // 8
-                w_trans = den_crop.shape[1] // 8
-                den_crop = cv2.resize(den_crop, (w_trans, h_trans), interpolation=cv2.INTER_CUBIC) * (den_crop.shape[0] * den_crop.shape[1]) / (h_trans * w_trans)
-                results.append([img_crop, den_crop])
-        return results
+        if self.both_transform is not None:
+            img, den = self.both_transform(img, den)
+        if self.img_transform is not None:
+            img = self.img_transform(img)
+        if self.gt_transform is not None:
+            den = self.gt_transform(den)
+        den = den[np.newaxis, :]
+        return img, den
 
     def load_data(self):
         result = []
-        index = 0
+        pbar = tqdm(total=self.length)
         for img_path in self.paths:
             gt_path = img_path.replace('.jpg', '.h5').replace('images', 'ground_truth')
             img = skimage.io.imread(img_path, plugin='matplotlib')
             img = skimage.color.grey2rgb(img)
-            with h5py.File(gt_path, 'r')  as gt_file:
-                den = np.asarray(gt_file['density'])
-            den = den[np.newaxis, :]
-            result.append([img, den])
-            if index % 100 == 99 or index == self.length:
-                print("load {0}/{1} images".format(index + 1, self.length))
-            index += 1
+            with h5py.File(gt_path, 'r') as gt_file:
+                try:
+                    den = np.asarray(gt_file['density'])
+                except:
+                    print(img.shape, img_path)
+                    continue
+            if self.mode == "test":
+                # den = np.asarray(den)
+                # img = np.asarray(img)
+                # height = den.shape[0]
+                # width = den.shape[1]
+                # h = height // 2
+                # w = width // 2
+                # result.append([img[: h, : w], den[: h, : w]])
+                # result.append([img[: h, w:], den[: h, w:]])
+                # result.append([img[h:, : w], den[h:, : w]])
+                # result.append([img[h:, w:], den[h:, w:]])
+                result.append([img, den])
+            elif self.mode == "train":
+                if den.shape[0] < 512 or den.shape[1] < 512:
+                    continue
+                else:
+                    result.append([img, den])
+            pbar.update(1)
+        self.length = len(result)
+        pbar.close()
         return result
-
-
-# class UCFQNRF(Dataset):
-#
-#     def __init__(self, mode="train", **kwargs):
-#         self.root = "./data/UCF-QNRF_ECCV18/Train/" if mode == "train" else \
-#                 "./data/UCF-QNRF_ECCV18/Test/"
-#         self.paths = glob.glob(self.root + "*.jpg")
-#         self.transform = kwargs['transform']
-#         self.length = len(self.paths)
-#         self.dataset = self.load_data()
-#
-#     def __len__(self):
-#         return self.length
-#
-#     def __getitem__(self, item):
-#         img, den = self.dataset[item]
-#         if self.transform is not None:
-#             img = self.transform(img)
-#         return img, den
-#
-#     def load_data(self):
-#         result = []
-#         index = 0
-#         for img_path in self.paths:
-#             gt_path = img_path.replace('.jpg', '.h5').replace('images', 'ground_truth')
-#             img = skimage.io.imread(img_path, plugin='matplotlib')
-#             img = skimage.color.grey2rgb(img)
-#             gt_file = h5py.File(gt_path)
-#             den = np.asarray(gt_file['density'])
-#             gt_file.close()
-#             print(img_path)
-#             print(img.shape)
-#             img_h, img_w, _ = img.shape
-#             zoom_size = 1
-#             if img_h < 1000:
-#                 pass
-#             elif img_h < 3000:
-#                 zoom_size = 2
-#                 img = cv2.resize(img, (img_w // zoom_size, img_h // zoom_size), cv2.INTER_CUBIC)
-#             else:
-#                 zoom_size = 4
-#                 img = cv2.resize(img, (img_w // zoom_size, img_h // zoom_size), cv2.INTER_CUBIC)
-#             h = den.shape[0]
-#             w = den.shape[1]
-#             h_trans = h // (8 * zoom_size)
-#             w_trans = w // (8 * zoom_size)
-#             den = cv2.resize(den, (w_trans, h_trans),
-#                              interpolation=cv2.INTER_CUBIC) * (h * w) / (h_trans * w_trans)
-#             result.append([img, den])
-#             if index % 100 == 99 or index == self.length:
-#                 print("load {0}/{1} images".format(index + 1, self.length))
-#             index += 1
-#         return result

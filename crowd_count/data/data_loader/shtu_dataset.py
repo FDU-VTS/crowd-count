@@ -4,6 +4,7 @@ from PIL import Image
 import numpy as np
 import h5py
 from tqdm import tqdm
+import os
 
 
 class ShanghaiTechDataset(Dataset):
@@ -13,15 +14,16 @@ class ShanghaiTechDataset(Dataset):
                  part="a",
                  img_transform=None,
                  gt_transform=None,
-                 both_transform=None,):
+                 both_transform=None,
+                 dir="../crowd_count/data/datasets/shtu_dataset/"):
         self.root = {
             "a": {
-                "train": "./crowd_count/data/datasets/shtu_dataset/part_A_final/train_data/",
-                "test": "./crowd_count/data/datasets/shtu_dataset/part_A_final/test_data/",
+                "train": os.path.join(dir, "part_A_final/train_data/"),
+                "test": os.path.join(dir, "part_A_final/test_data/"),
             },
             "b": {
-                "train": "./crowd_count/data/datasets/shtu_dataset/part_B_final/train_data/",
-                "test": "./crowd_count/data/datasets/shtu_dataset/part_B_final/test_data/",
+                "train": os.path.join(dir, "part_B_final/train_data/"),
+                "test": os.path.join(dir, "part_B_final/test_data/"),
             }
         }[part][mode]
         self.paths = glob.glob(self.root + "images/*.jpg")
@@ -46,6 +48,7 @@ class ShanghaiTechDataset(Dataset):
         return img, den
 
     def load_data(self):
+        print("******************shtu_data loading******************")
         result = []
         pbar = tqdm(total=self.length)
         for img_path in self.paths:

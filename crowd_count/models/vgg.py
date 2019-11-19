@@ -7,6 +7,7 @@
 import torch.nn as nn
 from torchvision import models
 from crowd_count.utils import loss
+import torch.nn.functional as F
 
 
 class VGG(nn.Module):
@@ -30,6 +31,7 @@ class VGG(nn.Module):
         x = self.frontend(x)
         x = self.backend(x)
         x = self.output_layer(x)
+        x = F.interpolate(x, scale_factor=8)
         return x
 
 

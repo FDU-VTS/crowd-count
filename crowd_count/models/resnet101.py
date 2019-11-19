@@ -22,7 +22,7 @@ class Res101(nn.Module):
         x = self.frontend(x)
         x = self.own_reslayer_3(x)
         x = self.de_pred(x)
-        x = F.upsample(x,scale_factor=8)
+        x = F.interpolate(x,scale_factor=8)
 
         return x
 

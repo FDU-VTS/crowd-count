@@ -46,11 +46,12 @@ class TestLoss:
 
 class EnlargeLoss:
 
-    def __init__(self):
+    def __init__(self, number):
         super(EnlargeLoss).__init__()
+        self.number = number
 
-    def __call__(self, output, ground_truth, number):
-        sum_output = torch.sum(output / number)
+    def __call__(self, output, ground_truth):
+        sum_output = torch.sum(output / self.number)
         sum_gt = torch.sum(ground_truth)
         mae = abs(sum_output - sum_gt)
         mse = mae ** 2
