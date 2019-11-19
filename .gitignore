@@ -1,3 +1,17 @@
+crowd_count.egg-info/
+/build
+*/*.pyc
+*/*.so*
+*/**/__pycache__
+*/**/*.dylib*
+*/**/*.pyc
+*/**/*.pyd
+*/**/*.so*
+*/**/**/*.pyc
+*/**/**/**/*.pyc
+*/**/**/**/**/*.pyc
+loukey.egg-info/
+dist/
 *.pyc
 __pycache__
 *.idea
