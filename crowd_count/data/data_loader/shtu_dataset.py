@@ -53,6 +53,8 @@ class ShanghaiTechDataset(Dataset):
         pbar = tqdm(total=self.length)
         for img_path in self.paths:
             gt_path = img_path.replace('.jpg', '.h5').replace('images', 'ground_truth')
+            if not os.path.exists(img_path) or not os.path.exists(gt_path):
+                raise IOError("{} does not exist".format(img_path))
             img = Image.open(img_path).convert('RGB')
             with h5py.File(gt_path, 'r') as gt_file:
                 den = np.asarray(gt_file['density'])
