@@ -7,6 +7,7 @@ from crowd_count.utils import *
 import crowd_count.transforms as cc_transforms
 import torchvision.transforms as transforms
 
+
 model = Res101()
 img_transform = transforms.Compose([transforms.ToTensor(),
                                     transforms.Normalize(mean=[0.452016860247, 0.447249650955, 0.431981861591],
@@ -19,5 +20,5 @@ test_set = ShanghaiTechDataset(mode="test", part="b", img_transform=img_transfor
 train_loss = AVGLoss()
 test_loss = EnlargeLoss(100)
 saver = Saver(path="../exp/shtu_b")
-train(model, train_set, test_set, train_loss, test_loss, optim="Adam", saver=saver, cuda_num=[1, 2], train_batch=2,
+train(model, train_set, test_set, train_loss, test_loss, optim="Adam", saver=saver, cuda_num=[0, 1], train_batch=2,
       test_batch=1, test_crop_size=1, learning_rate=1e-5, enlarge_num=100)

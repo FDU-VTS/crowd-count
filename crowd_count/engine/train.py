@@ -5,7 +5,6 @@ import torch.optim
 import torch.nn
 from torch.optim.lr_scheduler import StepLR
 import math
-import time
 
 
 def train(model,
@@ -63,7 +62,7 @@ def train(model,
             if i % 10 == 9 or i == len(train_loader) - 1:
                 print("| epoch: {} / {} | batch: {} / {} | loss: {:.6f} |".format(
                     epoch, epoch_num, i + 1, len(train_loader), (sum_loss - temp_loss) / 10))
-                print("| lr: %.8f | output: %.1f | gt: %.1f |" % (optimizer.param_groups[0]['lr'] ,sum_output / (10 * train_batch * enlarge_num), sum_gt / (10 * train_batch * enlarge_num)))
+                print("| lr: %.8f | output: %.1f | gt: %.1f |" % (optimizer.param_groups[0]['lr'], sum_output / (10 * train_batch * enlarge_num), sum_gt / (10 * train_batch * enlarge_num)))
                 print("------------------------------------------------------")
                 sum_output, sum_gt = [0.0] * 2
                 temp_loss = sum_loss
@@ -78,8 +77,8 @@ def train(model,
                 mae, mse = test_loss(output, ground_truth)
                 sum_mae += float(mae)
                 sum_mse += float(mse)
-            avg_mae = sum_mae / (len(test_loader) * test_batch / test_crop_size)
-            avg_mse = math.sqrt(sum_mse / (len(test_loader))) / test_batch * test_crop_size
+            avg_mae = sum_mae / len(test_loader)
+            avg_mse = math.sqrt(sum_mse / (len(test_loader)))
             if avg_mae < min_mae:
                 min_mae = avg_mae
                 min_mse = avg_mse

@@ -2,13 +2,14 @@
 from PIL import Image
 import numpy as np
 import random
-import torchvision.transforms.functional as F
-__all__ = ["SingleCompose", "ComplexCompose", "ResizeShrink", "LabelEnlarge", "TransposeFlip", "RandomCrop"]
+import collections
+import numbers
+
+__all__ = ["SingleCompose", "ComplexCompose", "ResizeShrink",
+           "LabelEnlarge", "TransposeFlip", "RandomCrop",
+           "Scale"]
 
 
-# den: density map
-# size: the size of shrinking
-# zoom out the density map with cubic spline interpolation
 class SingleCompose(object):
 
     def __init__(self, cc_transforms):
@@ -49,15 +50,15 @@ class ComplexCompose(object):
 
 class ResizeShrink(object):
 
-    def __init__(self, size):
-        self.size = size
+    def __init__(self, scale_factor):
+        self.scale_factor = scale_factor
 
     def __call__(self, den):
         if not isinstance(den, Image.Image):
             den = Image.fromarray(den)
         w, h = den.size
-        h_trans = h // self.size
-        w_trans = w // self.size
+        h_trans = h // self.scale_factor
+        w_trans = w // self.scale_factor
         den = np.asarray(den.resize((w_trans, h_trans), Image.BICUBIC)) * (h * w) / (h_trans * w_trans)
         return den
 
@@ -95,39 +96,62 @@ class TransposeFlip(object):
 
 class RandomCrop(object):
 
-    def __init__(self, crop_height, crop_width):
-        self.crop_width = crop_width
-        self.crop_height = crop_height
+    def __init__(self, size):
+        if isinstance(size, numbers.Number):
+            self.size = (size, size)
+        else:
+            self.size = size
 
     def __call__(self, img, den):
         if not isinstance(den, Image.Image):
             den = Image.fromarray(den)
         if not isinstance(img, Image.Image):
             img = Image.fromarray(img)
-        height = img.size[0]
-        width = img.size[1]
-        height_start = int(random.random() * (height - self.crop_height))
-        width_start = int(random.random() * (width - self.crop_width))
-        img = F.crop(img, height_start, width_start, self.crop_height, self.crop_width)
-        den = F.crop(den, height_start, width_start, self.crop_height, self.crop_width)
+        width, height = img.size
+        h, w = self.size
+        height_start = int(random.random() * (height - h))
+        width_start = int(random.random() * (width - w))
+        img = img.crop((width_start, height_start, width_start + w, height_start + h))
+        den = den.crop((width_start, height_start, width_start + w, height_start + h))
         return img, np.asarray(den)
 
+    def __repr__(self):
+        return __class__.__name__ + '()'
 
-class FixedCrop(object):
 
-    def __init__(self, crop_size):
-        self.crop_size = crop_size
+class Test(object):
+
+    def __init__(self):
+        pass
+
+
+class Scale(object):
+
+    def __init__(self, size, interpolation=Image.BILINEAR):
+        assert isinstance(size, int) or (isinstance(size, collections.Iterable) and len(size) == 2)
+        self.size = size
+        self.interpolation = interpolation
 
     def __call__(self, img, den):
-        result = []
-        den = np.asarray(den)
-        img = np.asarray(img)
-        height = den.shape[0]
-        width = den.shape[1]
-        h = height // self.crop_size
-        w = width // self.crop_size
-        result.append([img[: h, : w], den[: h, : w]])
-        result.append([img[: h, w:], den[: h, w:]])
-        result.append([img[h:, : w], den[h:, : w]])
-        result.append([img[h:, w:], den[h:, w:]])
-        return result
+        if not isinstance(den, Image.Image):
+            den = Image.fromarray(den)
+        if not isinstance(img, Image.Image):
+            img = Image.fromarray(img)
+        if isinstance(self.size, int):
+            w, h = img.size
+            if (w <= h and w == self.size) or (h <= w and h == self.size):
+                return img, np.asarray(den)
+            if w < h:
+                ow = self.size
+                oh = int(self.size * h / w)
+                return img.resize((ow, oh), self.interpolation), np.asarray(den.resize((ow, oh), self.interpolation))
+            else:
+                oh = self.size
+                ow = int(self.size * w / h)
+                return img.resize((ow, oh), self.interpolation), np.asarray(den.resize((ow, oh), self.interpolation))
+        else:
+            return img.resize(self.size[::-1], self.interpolation), \
+                   np.asarray(den.resize(self.size[::-1], self.interpolation))
+
+    def __repr__(self):
+        return __class__.__name__ + '()'
