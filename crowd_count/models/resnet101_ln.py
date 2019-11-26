@@ -4,9 +4,9 @@ from .network import Conv2d
 import torch.nn.functional as F
 
 
-class Res101(nn.Module):
+class Res101_LN(nn.Module):
     def __init__(self, pretrained=True):
-        super(Res101, self).__init__()
+        super(Res101_LN, self).__init__()
 
         self.de_pred = nn.Sequential(Conv2d(1024, 128, 1, same_padding=True, NL='relu'),
                                      Conv2d(128, 1, 1, same_padding=True, NL='relu'))

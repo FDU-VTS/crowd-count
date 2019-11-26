@@ -23,7 +23,6 @@ def train(model,
           epoch_num=2000,
           learning_decay=0.995,
           saver=None,
-          test_crop_size=1,
           enlarge_num=1
           ):
     device = "cuda: {0}".format(cuda_num[0]) if torch.cuda.is_available() else "cpu"
@@ -62,12 +61,15 @@ def train(model,
             if i % 10 == 9 or i == len(train_loader) - 1:
                 print("| epoch: {} / {} | batch: {} / {} | loss: {:.6f} |".format(
                     epoch, epoch_num, i + 1, len(train_loader), (sum_loss - temp_loss) / 10))
-                print("| lr: %.8f | output: %.1f | gt: %.1f |" % (optimizer.param_groups[0]['lr'], sum_output / (10 * train_batch * enlarge_num), sum_gt / (10 * train_batch * enlarge_num)))
+                print("| *Train* | lr: %.8f | output: %.1f | gt: %.1f |" % (optimizer.param_groups[0]['lr'],
+                                                                  sum_output / (10 * train_batch * enlarge_num),
+                                                                  sum_gt / (10 * train_batch * enlarge_num)))
                 print("------------------------------------------------------")
                 sum_output, sum_gt = [0.0] * 2
                 temp_loss = sum_loss
         if scheduler_flag is True:
             scheduler.step()
+
         model = model.eval()
         with torch.no_grad():
             for img, ground_truth in iter(test_loader):

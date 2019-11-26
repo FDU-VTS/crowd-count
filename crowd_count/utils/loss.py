@@ -38,13 +38,13 @@ class TestLoss:
 
     def __call__(self, output, ground_truth):
         mae, mse = [0.0] * 2
-        length = len(output)
-        for i in range(length):
+        batch = len(output)
+        for i in range(batch):
             sum_output = torch.sum(output[i])
             sum_gt = torch.sum(ground_truth[i])
             mae += abs(sum_output - sum_gt)
             mse += (sum_output - sum_gt) * (sum_output - sum_gt)
-        return mae / length, mse / length
+        return mae / batch, mse / batch
 
 
 class EnlargeLoss:
@@ -55,10 +55,10 @@ class EnlargeLoss:
 
     def __call__(self, output, ground_truth):
         mae, mse = [0.0] * 2
-        length = len(output)
-        for i in range(length):
+        batch = len(output)
+        for i in range(batch):
             sum_output = torch.sum(output[i] / self.number)
             sum_gt = torch.sum(ground_truth[i])
             mae += abs(sum_output - sum_gt)
             mse += mae ** 2
-        return mae / length, mse / length
+        return mae / batch, mse / batch
