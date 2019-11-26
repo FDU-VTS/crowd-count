@@ -30,4 +30,4 @@ exp
 *.npy
 crowd_count/data/datasets/*
 *.pt
-run/
+runs/
