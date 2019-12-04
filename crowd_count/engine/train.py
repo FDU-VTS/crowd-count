@@ -61,7 +61,7 @@ def train(model,
             if i % 10 == 9 or i == len(train_loader) - 1:
                 print("| epoch: {} / {} | batch: {} / {} | loss: {:.6f} |".format(
                     epoch, epoch_num, i + 1, len(train_loader), (sum_loss - temp_loss) / 10))
-                print("| *Train* | lr: %.8f | output: %.1f | gt: %.1f |" % (optimizer.param_groups[0]['lr'],
+                print("| Train | lr: %.8f | output: %.1f | gt: %.1f |" % (optimizer.param_groups[0]['lr'],
                                                                   sum_output / (10 * train_batch * enlarge_num),
                                                                   sum_gt / (10 * train_batch * enlarge_num)))
                 print("------------------------------------------------------")

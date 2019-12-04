@@ -20,11 +20,11 @@ train_set = ShanghaiTechDataset(mode="train",
                                 img_transform=img_transform,
                                 gt_transform=gt_transform,
                                 both_transform=both_transform,
-                                dir="../crowd_count/data/datasets/shtu_dataset_sigma_15/")
+                                root="../crowd_count/data/datasets/shtu_dataset_sigma_15/")
 test_set = ShanghaiTechDataset(mode="test",
                                part="b",
                                img_transform=img_transform,
-                               dir="../crowd_count/data/datasets/shtu_dataset_sigma_15/")
+                               root="../crowd_count/data/datasets/shtu_dataset_sigma_15/")
 train_loss = AVGLoss()
 test_loss = EnlargeLoss(100)
 saver = Saver(path="../exp/2019-11-25_shtu_b_batch_4")

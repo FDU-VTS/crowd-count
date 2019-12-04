@@ -20,10 +20,11 @@ def gaussian_filter_density(gt):
     pts = np.array(list(zip(np.nonzero(gt)[1], np.nonzero(gt)[0])))
     leafsize = 2048
     # build kdtree
-    # tree = scipy.spatial.KDTree(pts.copy(), leafsize=leafsize)
-    # # query kdtree
-    # distances, locations = tree.query(pts, k=4)
+    tree = scipy.spatial.KDTree(pts.copy(), leafsize=leafsize)
+    # query kdtree
+    distances, locations = tree.query(pts, k=4)
 
+    print('generate density...')
     num = pts.shape[0] - 1
     for i, pt in enumerate(pts):
         pt2d = np.zeros(gt.shape, dtype=np.float32)
@@ -32,8 +33,8 @@ def gaussian_filter_density(gt):
         #     sigma = (distances[i][1]+distances[i][2]+distances[i][3])*0.1
         # else:
         #     sigma = np.average(np.array(gt.shape))/2./2. #case: 1 point
-        # w = 2*int(truncate*sigma + 0.5) + 1
         density += scipy.ndimage.filters.gaussian_filter(pt2d, 15, mode='constant')
+    print('done.')
     return density
 
 
@@ -66,10 +67,11 @@ def shtu(root):
 def ucf_qnrf(root):
     train_path = os.path.join(root, 'Train')
     test_path = os.path.join(root, 'Test')
-    path_sets = [train_path, test_path]
+    path_sets = [test_path]
 
     for path in path_sets:
         for img_path in glob.glob(os.path.join(path, '*.jpg')):
+            print(img_path)
             mat = io.loadmat(img_path.replace('.jpg', '_ann.mat'))
             img = skimage.io.imread(img_path, plugin='matplotlib')
             k = np.zeros((img.shape[0], img.shape[1]))
@@ -123,3 +125,5 @@ def shtu_mask(root):
             k = gaussian_filter_density(k)
             with h5py.File(img_path.replace('.jpg', '.h5').replace('images', 'ground_truth').replace('IMG_', 'GT_MASK_'), 'w') as hf:
                 hf['density'] = k
+
+# ucf_qnrf("/home/vts/chensongjian/CrowdCount/crowd_count/data/datasets/UCF-QNRF_ECCV18_sigma_15")

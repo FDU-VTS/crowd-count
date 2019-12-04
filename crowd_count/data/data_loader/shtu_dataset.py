@@ -1,13 +1,13 @@
-from torch.utils.data import Dataset
 import glob
 from PIL import Image
 import numpy as np
 import h5py
 from tqdm import tqdm
 import os
+from.crowd_dataset import CrowdDataset
 
 
-class ShanghaiTechDataset(Dataset):
+class ShanghaiTechDataset(CrowdDataset):
 
     def __init__(self,
                  mode="train",
@@ -15,42 +15,26 @@ class ShanghaiTechDataset(Dataset):
                  img_transform=None,
                  gt_transform=None,
                  both_transform=None,
-                 dir="../crowd_count/data/datasets/shtu_dataset/"):
+                 root="../crowd_count/data/datasets/shtu_dataset/"):
+        super().__init__(img_transform, gt_transform, both_transform)
         self.root = {
             "a": {
-                "train": os.path.join(dir, "part_A_final/train_data/"),
-                "test": os.path.join(dir, "part_A_final/test_data/"),
+                "train": os.path.join(root, "part_A_final/train_data/"),
+                "test": os.path.join(root, "part_A_final/test_data/"),
             },
             "b": {
-                "train": os.path.join(dir, "part_B_final/train_data/"),
-                "test": os.path.join(dir, "part_B_final/test_data/"),
+                "train": os.path.join(root, "part_B_final/train_data/"),
+                "test": os.path.join(root, "part_B_final/test_data/"),
             }
         }[part][mode]
+        self.mode = mode
+        self.part = part
         self.paths = glob.glob(self.root + "images/*.jpg")
-        self.img_transform = img_transform
-        self.gt_transform = gt_transform
-        self.both_transform = both_transform
-        self.length = len(self.paths)
-        self.dataset = self.load_data()
-
-    def __len__(self):
-        return self.length
-
-    def __getitem__(self, item):
-        img, den = self.dataset[item]
-        if self.both_transform is not None:
-            img, den = self.both_transform(img, den)
-        if self.img_transform is not None:
-            img = self.img_transform(img)
-        if self.gt_transform is not None:
-            den = self.gt_transform(den)
-        den = den[np.newaxis, :]
-        return img, den
+        self.load_data()
 
     def load_data(self):
-        print("******************shtu_data loading******************")
-        result = []
-        pbar = tqdm(total=self.length)
+        print("******************shtu_{mode}_{part} loading******************".format(mode=self.mode, part=self.part))
+        pbar = tqdm(total=len(self.paths))
         for img_path in self.paths:
             gt_path = img_path.replace('.jpg', '.h5').replace('images', 'ground_truth')
             if not os.path.exists(img_path) or not os.path.exists(gt_path):
@@ -58,7 +42,6 @@ class ShanghaiTechDataset(Dataset):
             img = Image.open(img_path).convert('RGB')
             with h5py.File(gt_path, 'r') as gt_file:
                 den = np.asarray(gt_file['density'])
-            result.append([img, den])
+            self.dataset.append([img, den])
             pbar.update(1)
         pbar.close()
-        return result
