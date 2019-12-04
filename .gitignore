@@ -1,5 +1,7 @@
 crowd_count.egg-info/
 /build
+*/build
+*/*/build
 */*.pyc
 */*.so*
 */**/__pycache__
