@@ -1,11 +1,11 @@
 import sys
 
 sys.path.append("../")
-from crowd_count.engine import train
-from crowd_count.models import *
-from crowd_count.data.data_loader import *
-from crowd_count.utils import *
-import crowd_count.transforms as cc_transforms
+from crowdcount.engine import train
+from crowdcount.models import *
+from crowdcount.data.data_loader import *
+from crowdcount.utils import *
+import crowdcount.transforms as cc_transforms
 import torchvision.transforms as transforms
 
 model = Res101()
@@ -21,12 +21,12 @@ train_set = UCFQNRF(mode="train",
                     img_transform=img_transform,
                     gt_transform=gt_transform,
                     both_transform=both_transform,
-                    root="../crowd_count/data/datasets/UCF-QNRF_ECCV18/")
+                    root="../crowdcount/data/datasets/UCF-QNRF_ECCV18/")
 test_set = UCFQNRF(mode="test",
                    img_transform=img_transform,
                    gt_transform=gt_transform,
                    both_transform=both_transform,
-                   root="../crowd_count/data/datasets/UCF-QNRF_ECCV18/")
+                   root="../crowdcount/data/datasets/UCF-QNRF_ECCV18/")
 train_loss = AVGLoss()
 test_loss = EnlargeLoss(100)
 saver = Saver(mode="remain", path="../exp/11-27-ucf_qnrf")

@@ -11,6 +11,19 @@ __all__ = ["SingleCompose", "ComplexCompose", "ResizeShrink",
 
 
 class SingleCompose(object):
+    """Compose several transforms witch only transform single input (image or density map)
+
+    Args:
+        transforms (list of ``Transform`` objects which transform one object:
+            [``ResizeShrink``, ``LabelEnlarge``]): list of transforms to Compose
+
+    Example:
+        >>> import crowd_count.transforms as cc_transforms
+        >>> cc_transforms.SingleCompose([
+        >>>     ResizeShrink(8),
+        >>>     LabelEnlarge(10),
+        >>> ])
+    """
 
     def __init__(self, cc_transforms):
         self.cc_transforms = cc_transforms
@@ -30,6 +43,20 @@ class SingleCompose(object):
 
 
 class ComplexCompose(object):
+    """Compose several transforms witch transform both of image and density map
+
+    Args:
+        transforms (list of ``Transform`` objects which transform two objects:
+            [``TransposeFlip``, ``RandomCrop``, ``Scale``]): list of transforms to Compose
+
+    Example:
+        >>> import crowd_count.transforms as cc_transforms
+        >>> cc_transforms.ComplexCompose([
+        >>>     TransposeFlip(),
+        >>>     RandomCrop([512, 512]),
+        >>>     Scale([512, 512]),
+        >>> ])
+    """
 
     def __init__(self, cc_transforms):
         self.cc_transforms = cc_transforms
@@ -49,11 +76,35 @@ class ComplexCompose(object):
 
 
 class ResizeShrink(object):
+    """ Reduce the density map scale_factor times (to suit the output be pooled)
+
+    Args:
+        scale_factor (int): Desired reduction factor. The output size will be divided by scale_factor.
+            If the scale_factor is 8 and the size of input is (20, 10), the output size will be (20 // 8, 10 // 8) = (2, 1)
+            to match the output image which be pooled.
+
+    Example:
+        >>> import crowd_count.transforms as cc_transforms
+        >>> import numpy as np
+        >>> resize_shrink = cc_transforms.ResizeShrink(8)
+        >>> density_map = np.random.rand(20, 10)
+        >>> density_map.shape
+        (20, 10)
+        >>> resize_shrink(density_map)
+        array([[52.175777], [46.061344]], dtype=float32)
+    """
 
     def __init__(self, scale_factor):
         self.scale_factor = scale_factor
 
     def __call__(self, den):
+        """
+        Args:
+            density map (PIL Image or numpy.ndarray): density map to be shrunk
+
+        Returns:
+            numpy.ndarray: Rescaled image
+        """
         if not isinstance(den, Image.Image):
             den = Image.fromarray(den)
         w, h = den.size
@@ -67,6 +118,9 @@ class ResizeShrink(object):
 
 
 class LabelEnlarge(object):
+    """
+
+    """
 
     def __init__(self, number=100):
         self.number = number

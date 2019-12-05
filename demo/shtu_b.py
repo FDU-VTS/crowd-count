@@ -1,10 +1,10 @@
 import sys
 sys.path.append("../")
-from crowd_count.engine import train
-from crowd_count.models import Res101
-from crowd_count.data.data_loader import *
-from crowd_count.utils import *
-import crowd_count.transforms as cc_transforms
+from crowdcount.engine import train
+from crowdcount.models import Res101
+from crowdcount.data.data_loader import *
+from crowdcount.utils import *
+import crowdcount.transforms as cc_transforms
 import torchvision.transforms as transforms
 
 
@@ -20,11 +20,11 @@ train_set = ShanghaiTechDataset(mode="train",
                                 img_transform=img_transform,
                                 gt_transform=gt_transform,
                                 both_transform=both_transform,
-                                root="../crowd_count/data/datasets/shtu_dataset_sigma_15/")
+                                root="../crowdcount/data/datasets/shtu_dataset_sigma_15/")
 test_set = ShanghaiTechDataset(mode="test",
                                part="b",
                                img_transform=img_transform,
-                               root="../crowd_count/data/datasets/shtu_dataset_sigma_15/")
+                               root="../crowdcount/data/datasets/shtu_dataset_sigma_15/")
 train_loss = AVGLoss()
 test_loss = EnlargeLoss(100)
 saver = Saver(path="../exp/2019-11-25_shtu_b_batch_4")

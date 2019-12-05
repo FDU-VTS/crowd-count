@@ -1,10 +1,10 @@
 import sys
 sys.path.append("../")
-from crowd_count.engine import train
-from crowd_count.models import *
-from crowd_count.data.data_loader import *
-from crowd_count.utils import *
-import crowd_count.transforms as cc_transforms
+from crowdcount.engine import train
+from crowdcount.models import *
+from crowdcount.data.data_loader import *
+from crowdcount.utils import *
+import crowdcount.transforms as cc_transforms
 import torchvision.transforms as transforms
 
 
