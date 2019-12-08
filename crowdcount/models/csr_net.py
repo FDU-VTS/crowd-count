@@ -1,23 +1,16 @@
 # -*- coding:utf-8 -*-
-# ------------------------
-# written by Songjian Chen
-# 2018-11
-# ------------------------
-"""
-@inproceedings{li2018csrnet,
-  title={CSRNet: Dilated convolutional neural networks for understanding the highly congested scenes},
-  author={Li, Yuhong and Zhang, Xiaofan and Chen, Deming},
-  booktitle={Proceedings of the IEEE Conference on Computer Vision and Pattern Recognition},
-  pages={1091--1100},
-  year={2018}
-}
-"""
 import torch.nn as nn
 from torchvision import models
 import torch.nn.functional as F
 
 
 class CSRNet(nn.Module):
+    """Refer from `"CSRNet: ..." <https://arxiv.org/abs/1802.10062>`_ paper.
+
+    Args:
+        load_weights (bool): If True, CSRNet will be pre-trained on ImageNet
+
+    """
     def __init__(self, load_weights=False):
         super(CSRNet, self).__init__()
         print("*****init CSR net*****")
@@ -36,6 +29,7 @@ class CSRNet(nn.Module):
         x = self.frontend(x)
         x = self.backend(x)
         x = self.output_layer(x)
+        x = F.interpolate(x,scale_factor=8)
         return x
 
     def _initialize_weights(self):

@@ -31,5 +31,4 @@ train_loss = AVGLoss()
 test_loss = EnlargeLoss(100)
 saver = Saver(mode="remain", path="../exp/11-27-ucf_qnrf")
 train(model, train_set, test_set, train_loss, test_loss, optim="Adam", saver=saver, cuda_num=[0, 1, 2, 3],
-      train_batch=4,
-      test_batch=4, learning_rate=1e-5, enlarge_num=100, scheduler_flag=True)
+      train_batch=4,test_batch=4, learning_rate=1e-5, enlarge_num=100, scheduler_flag=True)

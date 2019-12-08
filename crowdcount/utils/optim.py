@@ -3,6 +3,19 @@ import torch.nn as nn
 
 
 def weights_normal_init(model, dev=0.01):
+    """For modules in model,
+    if module is Convolutional layer: init with torch.nn.init.normal_(mean, std),
+    elif module is Linear layer: init with torch.nn.init.fill_(val),
+    elif module is Batch Normalization layer: init with torch.nn.init.constant_(tensor, val)
+
+    Args:
+        model (torch.nn.module): the model to be init
+        dev (float): the standard deviation used in norm init
+
+    Returns:
+        model (torch.nn.module)
+
+    """
     if isinstance(model, list):
         for m in model:
             weights_normal_init(m, dev)

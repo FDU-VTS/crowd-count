@@ -6,6 +6,9 @@ import numpy as np
 
 
 class FudanDataset(Dataset):
+    """Fudan-ShanghaiTech Dataset
+
+    """
 
     def __init__(self,
                  mode="train",

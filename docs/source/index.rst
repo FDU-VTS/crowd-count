@@ -1,20 +1,18 @@
-.. crowd_count documentation master file, created by
-   sphinx-quickstart on Thu Dec  5 16:05:31 2019.
-   You can adapt this file completely to your liking, but it should at least
-   contain the root `toctree` directive.
+crowdcount
+==========
 
-Welcome to crowd_count's documentation!
-=======================================
+The :mod:`crowdcount` package can help you build crowd counting project quickly
 
 .. toctree::
    :maxdepth: 2
    :caption: Package Reference
 
-   data
+   data.data_loader
+   data.data_perprocess
    engine
    models
    transforms
    utils
 
-.. automodule:: crowd_count
+.. automodule:: crowdcount
   :members:

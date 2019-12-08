@@ -13,7 +13,7 @@ def train(model,
           train_loss,
           test_loss,
           cuda_num=[0],
-          optim: str = "Adam",
+          optim="Adam",
           scheduler_flag=True,
           learning_rate=1e-5,
           weight_decay=1e-4,
@@ -25,6 +25,29 @@ def train(model,
           saver=None,
           enlarge_num=1
           ):
+    """start to train
+
+    Args:
+        model (torch.nn.module): the model built to train.
+        train_set (torch.utils.data.Dataset or object): train dataset constructed into torch.utils.data.DataLoader.
+        test_set (torch.utils.data.Dataset or object): test dataset constructed into torch.utils.data.DataLoader.
+        train_loss (object): train loss function constructed from crowdcount.utils.
+        test_loss (object): test loss function constructed from crowdcount.utils.
+        cuda_num (list, optional): CUDA devices(default: [0]).
+        optim (str, optional): optimizer, "Adam" | "SGD", if "Adam", torch.optim.Adam is used,
+            elif "SGD", torch.optim.SGD is used(default:"Adam").
+        scheduler_flag (bool, optional): if True, learning rate will decline every step with learning decay(default:True).
+        learning_rate (float, optional): learning rate used in optimizer (default: 1e-5).
+        weight_decay (float, optional): weight decay (L2 penalty)(default:1e-4).
+        train_batch (int, optional): train batch(default: 1).
+        test_batch (int, optional): test batch(default: 1).
+        num_worker (int, optional): how many subprocesses to use for data loading.
+            0 means that the data will be loaded in the main process(default: 8).
+        epoch_num (int, optional): how many epochs to train(default: 2000).
+        learning_decay: leaning decay used in scheduler(default: 0.995).
+        saver (crowdcount.Saver, optional): save model(default:None).
+        enlarge_num (int, optional): the scale factor used to enlarge density map(default: 1).
+    """
     device = "cuda: {0}".format(cuda_num[0]) if torch.cuda.is_available() else "cpu"
     model = model.to(device)
     if optim == "Adam":
@@ -69,7 +92,6 @@ def train(model,
                 temp_loss = sum_loss
         if scheduler_flag is True:
             scheduler.step()
-
         model = model.eval()
         with torch.no_grad():
             for img, ground_truth in iter(test_loader):

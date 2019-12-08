@@ -24,4 +24,3 @@ test_loss = EnlargeLoss(100)
 saver = Saver(mode="remain", path="../exp/11-27-shtu_a")
 train(model, train_set, test_set, train_loss, test_loss, optim="Adam", saver=saver, cuda_num=[3], train_batch=1,
       test_batch=1, learning_rate=1e-5, enlarge_num=100, scheduler_flag=True)
-

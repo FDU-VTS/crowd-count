@@ -1,26 +1,41 @@
-crowd\_count.transforms
+crowdcount.transforms
 =======================
 
-Submodules
-----------
+.. currentmodule:: crowdcount.transforms
 
 Transforms are common image and density map transformations. They can be chained
 together using SingleCompose (for single image or density map) ComplexCompose
 (for both image and density map),
 
-crowd\_count.transforms.transforms module
------------------------------------------
+Compose functions
+----------------
 
-.. automodule:: crowd_count.transforms.transforms
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. autoclass:: SingleCompose
 
+.. autoclass:: ComplexCompose
 
-Module contents
----------------
+SingleCompose
+-------------
 
-.. automodule:: crowd_count.transforms
-   :members:
-   :undoc-members:
-   :show-inheritance:
+.. autoclass:: ResizeShrink
+  :members: __call__
+  :special-members:
+
+.. autoclass:: LabelEnlarge
+  :members: __call__
+  :special-members:
+
+ComplexCompose
+--------------
+
+.. autoclass:: TransposeFlip
+  :members: __call__
+  :special-members:
+
+.. autoclass:: RandomCrop
+  :members: __call__
+  :special-members:
+
+.. autoclass:: Scale
+  :members: __call__
+  :special-members:

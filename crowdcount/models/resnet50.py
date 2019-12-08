@@ -1,11 +1,16 @@
 from torchvision import models
-from crowd_count.models.network import ConvUnit
+from .network import ConvUnit
 import torch.nn as nn
-
 # borrowed from https://github.com/gjy3035/C-3-Framework
 
 
 class Res50(nn.Module):
+    """Refer from `"C-3-Framework..." <https://github.com/gjy3035/C-3-Framework>`_ paper
+
+    Args:
+        pretrain (bool): if True, this model will be pre-trianed on ImageNet
+
+    """
     def __init__(self, pretrained=True):
         super(Res50, self).__init__()
         self.de_pred = nn.Sequential(ConvUnit(1024, 128, 1),

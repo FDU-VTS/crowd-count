@@ -14,11 +14,11 @@ import os
 import sys
 sys.path.insert(0, os.path.abspath('../../'))
 
-import crowd_count
+import crowdcount
 
 # -- Project information -----------------------------------------------------
 
-project = 'crowd-count'
+project = 'crowdcount'
 copyright = '2019, Fudan-VTS'
 author = 'Fudan-VTS'
 
@@ -32,8 +32,15 @@ release = '0.0.2'
 # extensions coming with Sphinx (named 'sphinx.ext.*') or your custom
 # ones.
 extensions = [
+    'sphinx.ext.autodoc',
+    'sphinx.ext.autosummary',
+    'sphinx.ext.doctest',
+    'sphinx.ext.intersphinx',
+    'sphinx.ext.todo',
+    'sphinx.ext.coverage',
+    'sphinx.ext.mathjax',
     'sphinx.ext.napoleon',
-	'sphinx_rtd_theme',
+    'sphinx.ext.viewcode',
 ]
 
 # Add any paths that contain templates here, relative to this directory.
@@ -56,7 +63,6 @@ pygments_style = 'sphinx'
 
 # If true, `todo` and `todoList` produce output, else they produce nothing.
 todo_include_todos = True
-
 
 # -- Options for HTML output -------------------------------------------------
 

@@ -6,12 +6,16 @@
 
 import torch.nn as nn
 from torchvision import models
-from crowd_count.utils import loss
 import torch.nn.functional as F
 
 
 class VGG(nn.Module):
+    """Refer from `"VGG..." <https://arxiv.org/abs/1409.1556>`_ paper
 
+    Args:
+        load_weights (bool): If True, CSRNet will be pre-trained on ImageNet
+
+    """
     def __init__(self, load_weights=True):
         super(VGG, self).__init__()
         print("*****init VGG net*****")
@@ -23,7 +27,7 @@ class VGG(nn.Module):
         self.output_layer = nn.Conv2d(64, 1, kernel_size=1)
         if not load_weights:
             mod = models.vgg16(pretrained=True)
-            loss.weights_normal_init(self)
+            self._initialize_weights()
             for i in range(len(self.frontend.state_dict().items())):
                 list(self.frontend.state_dict().items())[i][1].data[:] = list(mod.state_dict().items())[i][1].data[:]
 
@@ -33,6 +37,16 @@ class VGG(nn.Module):
         x = self.output_layer(x)
         x = F.interpolate(x, scale_factor=8)
         return x
+
+    def _initialize_weights(self):
+        for m in self.modules():
+            if isinstance(m, nn.Conv2d):
+                m.weight.data.normal_(0.0, std=0.01)
+                if m.bias is not None:
+                    m.bias.data.fill_(0)
+            elif isinstance(m, nn.BatchNorm2d):
+                m.weight.fill_(1)
+                m.bias.data.fill_(0)
 
 
 def make_layers(cfg, in_channels=3, batch_norm=False):

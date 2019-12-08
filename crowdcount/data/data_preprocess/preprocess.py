@@ -67,7 +67,7 @@ def shtu(root):
 def ucf_qnrf(root):
     train_path = os.path.join(root, 'Train')
     test_path = os.path.join(root, 'Test')
-    path_sets = [test_path]
+    path_sets = [train_path]
 
     for path in path_sets:
         for img_path in glob.glob(os.path.join(path, '*.jpg')):
@@ -80,7 +80,7 @@ def ucf_qnrf(root):
                 if int(gt[i][1]) < img.shape[0] and int(gt[i][0]) < img.shape[1]:
                     k[int(gt[i][1]), int(gt[i][0])] = 1
             k = gaussian_filter_density(k)
-            with h5py.File(img_path.replace('.jpg', '.h5'), 'w') as hf:
+            with h5py.File(img_path.replace('.jpg', '.h5'), 'a') as hf:
                 hf['density'] = k
 
 
@@ -126,4 +126,4 @@ def shtu_mask(root):
             with h5py.File(img_path.replace('.jpg', '.h5').replace('images', 'ground_truth').replace('IMG_', 'GT_MASK_'), 'w') as hf:
                 hf['density'] = k
 
-# ucf_qnrf("/home/vts/chensongjian/CrowdCount/crowd_count/data/datasets/UCF-QNRF_ECCV18_sigma_15")
+# ucf_qnrf("/home/vts/chensongjian/CrowdCount/crowdcount/data/datasets/UCF-QNRF_ECCV18_sigma_15")

@@ -1,9 +1,10 @@
+# -*- coding:utf-8 -*-
 import torch
 import os
 
 
 class Saver:
-    r"""Saves the best models
+    """Saves the best models
 
     Args:
         mode (string, optional): Specifies the mode to confirm how to save the models.
@@ -29,3 +30,5 @@ class Saver:
             torch.save(model.state_dict(), "best_model.pt")
         elif self.mode == "remain":
             torch.save(model.state_dict(), os.path.join(self.path, "{0}.pt".format(name)))
+
+

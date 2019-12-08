@@ -1,3 +1,3 @@
 # Crowd Counting Package
 
-### `pip install crowd-count`
+### `pip install crowdcount`

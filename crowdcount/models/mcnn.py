@@ -1,24 +1,16 @@
 # -*- coding:utf-8 -*-
-# ------------------------
-# written by Songjian Chen
-# 2018-10
-# ------------------------
-"""
-@inproceedings{zhang2016single,
-  title={Single-image crowd counting via multi-column convolutional neural network},
-  author={Zhang, Yingying and Zhou, Desen and Chen, Siqin and Gao, Shenghua and Ma, Yi},
-  booktitle={Proceedings of the IEEE conference on computer vision and pattern recognition},
-  pages={589--597},
-  year={2016}
-}
-"""
 import torch.nn as nn
 import torch
 from .network import ConvUnit
 
 
 class MCNN(nn.Module):
+    """Refer from `"MCNN..." <https://www.semanticscholar.org/paper/Single-Image-Crowd-Counting-via-Multi-Column-Neural-Zhang-Zhou/2dc3b3eff8ded8914c8b536d05ee713ff0cdf3cd>`_ paper.
 
+    Args:
+        bn (bool): if True, Batch Normalization layer will be used after every convolutional layer
+
+    """
     def __init__(self, bn=False):
         super(MCNN, self).__init__()
         print("*****init MCNN net*****")

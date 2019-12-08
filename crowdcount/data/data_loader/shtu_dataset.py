@@ -8,6 +8,20 @@ from.crowd_dataset import CrowdDataset
 
 
 class ShanghaiTechDataset(CrowdDataset):
+    """ShanghaiTech Dataset,
+    Refer from `"MCNN..." <https://www.semanticscholar.org/paper/Single-Image-Crowd-Counting-via-Multi-Column-Neural-Zhang-Zhou/2dc3b3eff8ded8914c8b536d05ee713ff0cdf3cd>`_ paper.
+
+    Args:
+        mode (str, optional): "train" | "test", if "train": load the train part data,
+            if "test": load the test part data(default: "train").
+        part (str, optional): "a" | "b", if "a": load the ShanghaiTech part A,
+            if "b": load the shanghaiTech part B(default: "a").
+        img_transform (list of crowdcount.transform objects, optional): transforms applied to image(default: None).
+        gt_transform (list of crowdcount.transform objects, optional): transforms applied to ground truth(default: None).
+        both_transform (list of crowdcount.transform objects, optional):
+            transforms applied to both of image and ground truth(default:None).
+        root (str, optional): the root directory of dataset(default: "../crowd_count/data/datasets/shtu_dataset/").
+    """
 
     def __init__(self,
                  mode="train",

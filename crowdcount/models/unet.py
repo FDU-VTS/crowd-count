@@ -1,12 +1,16 @@
 import torch
 import torch.nn as nn
 import torch.nn.functional as F
-
-
 # borrowed from https://github.com/milesial/Pytorch-UNet
 
 
 class UNet(nn.Module):
+    """Refer from `"Pytorch-UNet..." <https://github.com/milesial/Pytorch-UNet>`_ paper
+
+    Args:
+        pretrain (bool): if True, this model will be pre-trianed on ImageNet
+
+    """
     def __init__(self):
         super(UNet, self).__init__()
         self.inc = inconv(3, 64)
