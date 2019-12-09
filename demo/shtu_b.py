@@ -26,5 +26,5 @@ test_set = ShanghaiTechMatlab(mode="test",
 train_loss = AVGLoss()
 test_loss = EnlargeLoss(100)
 saver = Saver(path="../exp/2019-12-7-shtu_b-resnet101_batch_2")
-train(model, train_set, test_set, train_loss, test_loss, optim="Adam", saver=saver, cuda_num=[2, 3], train_batch=2,
-      test_batch=2, learning_rate=1e-5, enlarge_num=100)
+train(model, train_set, test_set, train_loss, test_loss, optim="Adam", saver=saver, cuda_num=[0, 1, 2, 3], train_batch=4,
+      test_batch=4, learning_rate=1e-5, enlarge_num=100)
