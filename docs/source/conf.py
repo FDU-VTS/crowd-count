@@ -13,6 +13,7 @@
 import os
 import sys
 sys.path.insert(0, os.path.abspath('../../'))
+import sphinx
 
 # -- Project information -----------------------------------------------------
 
@@ -64,7 +65,7 @@ pygments_style = 'sphinx'
 todo_include_todos = True
 
 # auto api configuration
-autoapi_dirs = ['../crowdcount']
+autoapi_dirs = ['../../crowdcount']
 
 # -- Options for HTML output -------------------------------------------------
 
