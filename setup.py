@@ -5,7 +5,7 @@ with open("README.md", "r") as fh:
 
 setuptools.setup(
     name="crowdcount", # Replace with your own username
-    version="0.0.2.1",
+    version="0.0.2.2",
     author="Fudan-VTS",
     author_email="sjchen18@fudan.edu.cn",
     description="package for crowd counting",
