@@ -2,3 +2,4 @@ Sphinx==2.2.2
 sphinx-autoapi==1.2.1
 sphinx-rtd-theme==0.4.3
 h5py==2.8.0
+tqdm==4.28.1
