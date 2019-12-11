@@ -10,9 +10,9 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-import os
-import sys
-sys.path.insert(0, os.path.abspath('../'))
+# import os
+# import sys
+# sys.path.insert(0, os.path.abspath('../'))
 
 # -- Project information -----------------------------------------------------
 
@@ -41,7 +41,7 @@ intersphinx_mapping = {
 }
 
 autoapi_type = 'python'
-autoapi_dirs = ['crowdcount']
+autoapi_dirs = ['../crowdcount']
 autoapi_generate_api_docs = False
 
 # The suffix(es) of source filenames.
@@ -89,3 +89,34 @@ html_theme = 'sphinx_rtd_theme'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
+
+import re
+
+from sphinx import addnodes
+
+event_sig_re = re.compile(r'([a-zA-Z-]+)\s*\((.*)\)')
+
+def parse_event(env, sig, signode):
+    m = event_sig_re.match(sig)
+    if not m:
+        signode += addnodes.desc_name(sig, sig)
+        return sig
+    name, args = m.groups()
+    signode += addnodes.desc_name(name, name)
+    plist = addnodes.desc_parameterlist()
+    for arg in args.split(','):
+        arg = arg.strip()
+        plist += addnodes.desc_parameter(arg, arg)
+    signode += plist
+    return name
+
+
+def setup(app):
+    from sphinx.util.docfields import TypedField
+    app.add_object_type('confval', 'confval',
+                        objname='configuration value',
+                        indextemplate='pair: %s; configuration value')
+    fdesc = TypedField('parameter', label='Parameters',
+                         names=['param'], typenames=['type'], can_collapse=True)
+    app.add_object_type('event', 'event', 'pair: %s; event', parse_event,
+                        doc_field_types=[fdesc])
