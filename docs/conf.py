@@ -33,6 +33,19 @@ extensions = ['sphinx.ext.autodoc',
 
 napoleon_use_ivar = True
 
+autodoc_mock_imports = [
+    'torch',
+    'torchvision',
+    'pandas',
+    'h5py',
+    'skimage',
+    'scipy',
+    'tqdm',
+    'numpy',
+    'h5py',
+    'tqdm',
+]
+
 intersphinx_mapping = {
     'python': ('https://docs.python.org/', None),
     'numpy': ('http://docs.scipy.org/doc/numpy/', None),
