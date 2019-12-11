@@ -42,6 +42,10 @@ intersphinx_mapping = {
     'torch': ('https://pytorch.org/docs/stable/', None),
 }
 
+autoapi_type = 'python'
+autoapi_dirs = ['../crowdcount']
+autoapi_generate_api_docs = False
+
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
 # source_suffix = ['.rst', '.md']
@@ -64,10 +68,6 @@ language = None
 # directories to ignore when looking for source files.
 # This pattern also affects html_static_path and html_extra_path.
 exclude_patterns = ['_build']
-
-autoapi_type = 'python'
-autoapi_dirs = ['../crowdcount']
-autoapi_generate_api_docs = False
 
 # -- Options for manual page output ---------------------------------------
 
