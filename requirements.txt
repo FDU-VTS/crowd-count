@@ -4,6 +4,4 @@ h5py==2.8.0
 scikit-image==0.14.0
 scipy==1.1.0
 tqdm==4.28.1
-torch
-torchvision
 Pillow==6.2.1
