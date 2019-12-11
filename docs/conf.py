@@ -10,19 +10,10 @@
 # add these directories to sys.path here. If the directory is relative to the
 # documentation root, use os.path.abspath to make it absolute, like shown here.
 #
-import os
-import sys
-sys.path.insert(0, os.path.abspath('../crowdcount'))
-
-# -- Project information -----------------------------------------------------
-
-project = 'crowdcount'
-copyright = '2019, Fudan-VTS'
-author = 'Fudan-VTS'
-
-# The full version, including alpha/beta/rc tags
-release = '0.0.2'
-
+# import os
+# import sys
+# sys.path.insert(0, os.path.abspath('../'))
+import crowdcount
 
 # -- General configuration ---------------------------------------------------
 
@@ -34,15 +25,24 @@ extensions = ['autoapi.extension',
               'sphinx.ext.napoleon',
               ]
 
+autoapi_type = 'python'
+autoapi_dirs = ['../crowdcount']
+autoapi_generate_api_docs = False
+
 intersphinx_mapping = {
     'python': ('https://docs.python.org/', None),
     'numpy': ('http://docs.scipy.org/doc/numpy/', None),
     'torch': ('https://pytorch.org/docs/stable/', None),
 }
 
-autoapi_type = 'python'
-autoapi_dirs = ['../crowdcount']
-autoapi_generate_api_docs = False
+# -- Project information -----------------------------------------------------
+
+project = 'crowdcount'
+copyright = '2019, Fudan-VTS'
+author = 'Fudan-VTS'
+
+# The full version, including alpha/beta/rc tags
+release = '0.0.2'
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
@@ -89,34 +89,3 @@ html_theme = 'sphinx_rtd_theme'
 # relative to this directory. They are copied after the builtin static files,
 # so a file named "default.css" will overwrite the builtin "default.css".
 html_static_path = ['_static']
-
-import re
-
-from sphinx import addnodes
-
-event_sig_re = re.compile(r'([a-zA-Z-]+)\s*\((.*)\)')
-
-def parse_event(env, sig, signode):
-    m = event_sig_re.match(sig)
-    if not m:
-        signode += addnodes.desc_name(sig, sig)
-        return sig
-    name, args = m.groups()
-    signode += addnodes.desc_name(name, name)
-    plist = addnodes.desc_parameterlist()
-    for arg in args.split(','):
-        arg = arg.strip()
-        plist += addnodes.desc_parameter(arg, arg)
-    signode += plist
-    return name
-
-
-def setup(app):
-    from sphinx.util.docfields import TypedField
-    app.add_object_type('confval', 'confval',
-                        objname='configuration value',
-                        indextemplate='pair: %s; configuration value')
-    fdesc = TypedField('parameter', label='Parameters',
-                         names=['param'], typenames=['type'], can_collapse=True)
-    app.add_object_type('event', 'event', 'pair: %s; event', parse_event,
-                        doc_field_types=[fdesc])
