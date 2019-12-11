@@ -41,7 +41,7 @@ intersphinx_mapping = {
 }
 
 autoapi_type = 'python'
-autoapi_dirs = ['../crowdcount']
+autoapi_dirs = ['crowdcount']
 autoapi_generate_api_docs = False
 
 # The suffix(es) of source filenames.
