@@ -28,7 +28,7 @@ def train(model,
     """start to train
 
     Args:
-        model (torch.nn.module): the model built to train.
+        model (torch.nn.Module): the model built to train.
         train_set (torch.utils.data.Dataset or object): train dataset constructed into torch.utils.data.DataLoader.
         test_set (torch.utils.data.Dataset or object): test dataset constructed into torch.utils.data.DataLoader.
         train_loss (object): train loss function constructed from crowdcount.utils.
@@ -44,8 +44,8 @@ def train(model,
         num_worker (int, optional): how many subprocesses to use for data loading.
             0 means that the data will be loaded in the main process(default: 8).
         epoch_num (int, optional): how many epochs to train(default: 2000).
-        learning_decay: leaning decay used in scheduler(default: 0.995).
-        saver (crowdcount.Saver, optional): save model(default:None).
+        learning_decay (float, optional): leaning decay used in scheduler(default: 0.995).
+        saver (crowdcount.utils.Saver, optional): save model(default:None).
         enlarge_num (int, optional): the scale factor used to enlarge density map(default: 1).
     """
     device = "cuda: {0}".format(cuda_num[0]) if torch.cuda.is_available() else "cpu"

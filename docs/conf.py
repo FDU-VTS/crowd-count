@@ -39,6 +39,7 @@ extensions = ['autoapi.extension',
 intersphinx_mapping = {
     'python': ('https://docs.python.org/', None),
     'numpy': ('http://docs.scipy.org/doc/numpy/', None),
+    'torch': ('https://pytorch.org/docs/stable/', None),
 }
 
 # The suffix(es) of source filenames.
@@ -57,7 +58,7 @@ templates_path = ['_templates']
 #
 # This is also used if you do content translation via gettext catalogs.
 # Usually you set "language" from the command line for these cases.
-language = 'python'
+language = None
 
 # List of patterns, relative to source directory, that match files and
 # directories to ignore when looking for source files.
@@ -67,6 +68,17 @@ exclude_patterns = ['_build']
 autoapi_type = 'python'
 autoapi_dirs = ['../crowdcount']
 autoapi_generate_api_docs = False
+
+# -- Options for manual page output ---------------------------------------
+
+# One entry per manual page. List of tuples
+# (source start file, name, description, authors, manual section).
+man_pages = [
+    (master_doc, "crowdcount", u"crowdcount Documentation", [author], 1)
+]
+
+# If true, show URL addresses after external links.
+# man_show_urls = False
 
 # -- Options for HTML output -------------------------------------------------
 
