@@ -4,6 +4,15 @@ import math
 
 # this is borrowed from https://github.com/davideverona/deep-crowd-counting_crowdnet
 def gaussian_filter_density(gt):
+    """
+
+    Args:
+        gt (numpy.ndarray): the ground truth to be processed by gaussian filter
+
+    Return:
+        numpy.ndarray
+
+    """
     density = np.zeros(gt.shape, dtype=np.float32)
     gt_count = np.count_nonzero(gt)
     if gt_count == 0:

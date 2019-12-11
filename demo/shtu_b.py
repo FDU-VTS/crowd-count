@@ -15,14 +15,16 @@ img_transform = transforms.Compose([transforms.ToTensor(),
                                     ])
 gt_transform = cc_transforms.LabelEnlarge()
 both_transform = cc_transforms.ComplexCompose([cc_transforms.TransposeFlip()])
-train_set = ShanghaiTechMatlab(mode="train",
+train_set = ShanghaiTechDataset(mode="train",
+                                part="b",
                                img_transform=img_transform,
                                gt_transform=gt_transform,
-                               main_transform=both_transform,
-                               data_path="/home/vts/chensongjian/CrowdCount/crowdcount/data/datasets/ProcessedData/shanghaitech_part_B")
-test_set = ShanghaiTechMatlab(mode="test",
+                               both_transform=both_transform,
+                               root="../crowdcount/data/datasets/shtu_dataset_sigma_15")
+test_set = ShanghaiTechDataset(mode="test",
+                               part="b",
                               img_transform=img_transform,
-                              data_path="/home/vts/chensongjian/CrowdCount/crowdcount/data/datasets/ProcessedData/shanghaitech_part_B")
+                              root="../crowdcount/data/datasets/shtu_dataset_sigma_15")
 train_loss = AVGLoss()
 test_loss = EnlargeLoss(100)
 saver = Saver(path="../exp/2019-12-7-shtu_b-resnet101_batch_2")
