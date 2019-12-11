@@ -29,13 +29,9 @@ extensions = ['sphinx.ext.autodoc',
               'sphinx.ext.mathjax',
               'sphinx.ext.napoleon',
               'sphinx.ext.viewcode',
-              'sphinxcontrib.googleanalytics',
               ]
 
 napoleon_use_ivar = True
-
-googleanalytics_id = 'UA-90545585-1'
-googleanalytics_enabled = True
 
 intersphinx_mapping = {
     'python': ('https://docs.python.org/', None),
