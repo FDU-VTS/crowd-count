@@ -33,5 +33,7 @@ exp
 crowd_count/data/datasets/*
 *.pt
 runs/
-./docs/_build/*
-./docs/_templates/*
+docs/_build/*
+docs/_templates/*
+*.html
+*.doctree
