@@ -32,7 +32,6 @@ release = '0.0.2'
 extensions = ['autoapi.extension',
               'sphinx.ext.intersphinx',
               'sphinx.ext.napoleon',
-              'sphinx.ext.autodoc',
               ]
 
 intersphinx_mapping = {
