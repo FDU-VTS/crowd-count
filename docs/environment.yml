@@ -1,0 +1,19 @@
+name: loukey
+
+channels:
+    - anaconda
+
+dependencies:
+    - python==3.7
+    - pytorch
+    - pip
+      - Sphinx
+      - sphinx-autoapi
+      - sphinx-rtd-theme
+      - pandas
+      - numpy
+      - h5py
+      - scikit-image
+      - scipy
+      - tqdm
+      - Pillow
