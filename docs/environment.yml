@@ -7,13 +7,11 @@ dependencies:
     - python==3.7
     - pytorch
     - pip:
-        - Sphinx
-        - sphinx-autoapi
-        - sphinx-rtd-theme
-        - pandas
-        - numpy
-        - h5py
-        - scikit-image
-        - scipy
-        - tqdm
-        - Pillow
+        - matplotlib
+        - pyyaml
+        - sphinx-gallery
+        - sphinxcontrib-napoleon
+        - sphinxcontrib-bibtex
+        - sphinxcontrib-inlinesyntaxhighlight
+        - ase
+        - m2r
