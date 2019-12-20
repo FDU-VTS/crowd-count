@@ -9,7 +9,9 @@ import h5py
 
 
 class UCFCC50(Dataset):
+    """Refer from `"UCF_50" <https://www.crcv.ucf.edu/data/ucf-cc-50/>`_ dataset
 
+    """
     def __init__(self,
                  mode="train",
                  img_transform=None,

@@ -1,13 +1,24 @@
 from torch.utils.data import Dataset
 import os
-import PIL.Image as Image
+from PIL import Image
 import h5py
 import numpy as np
 
 
 class FudanDataset(Dataset):
-    """Fudan-ShanghaiTech Dataset
+    """Fudan-ShanghaiTech Dataset,
+    Refer from `"Locality-constrained..." <https://arxiv.org/pdf/1907.07911.pdf>` _paper.
+    include 100 videos captured from 13 different scenes, and FDST dataset contains 150,000 frames,
+    with a total of 394,081 annotated heads
 
+    Args:
+        mode (str, optional): "train" | "test", if "train": load the train part data,
+            if "test": load the test part data(default: "train").
+        img_transform (list of crowdcount.transform objects, optional): transforms applied to image(default: None).
+        gt_transform (list of crowdcount.transform objects, optional): transforms applied to ground truth(default: None).
+        both_transform (list of crowdcount.transform objects, optional):
+            transforms applied to both of image and ground truth(default:None).
+        root (str, optional): the root directory of dataset(default: "../crowd_count/data/datasets/shtu_dataset/").
     """
 
     def __init__(self,
@@ -15,8 +26,8 @@ class FudanDataset(Dataset):
                  img_transform=None,
                  gt_transform=None,
                  both_transform=None,
-                 dir="../crowd_count/data/datasets/FDST_dataset/"):
-        self.root = os.path.join(dir, "train_data/") if mode == "train" else os.path.join(dir, "test_data/")
+                 root="../crowd_count/data/datasets/FDST_dataset/"):
+        self.root = os.path.join(root, "train_data/") if mode == "train" else os.path.join(root, "test_data/")
         self.img_transform = img_transform
         self.gt_transform = gt_transform
         self.both_transform = both_transform

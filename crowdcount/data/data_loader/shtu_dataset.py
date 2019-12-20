@@ -4,7 +4,7 @@ import numpy as np
 import h5py
 from tqdm import tqdm
 import os
-from.crowd_dataset import CrowdDataset
+from .crowd_dataset import CrowdDataset
 
 
 class ShanghaiTechDataset(CrowdDataset):
@@ -47,7 +47,7 @@ class ShanghaiTechDataset(CrowdDataset):
         self.load_data()
 
     def load_data(self):
-        print("******************shtu_{mode}_{part} loading******************".format(mode=self.mode, part=self.part))
+        print("******************shtu_{part}_{mode} loading******************".format(mode=self.mode, part=self.part))
         pbar = tqdm(total=len(self.paths))
         for img_path in self.paths:
             gt_path = img_path.replace('.jpg', '.h5').replace('images', 'ground_truth')

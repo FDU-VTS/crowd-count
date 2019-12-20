@@ -2,7 +2,7 @@ import numpy as np
 import os
 from torch.utils import data
 from PIL import Image
-import pandas as pd
+from pandas import read_csv
 
 
 class ShanghaiTechMatlab(data.Dataset):
@@ -35,7 +35,7 @@ class ShanghaiTechMatlab(data.Dataset):
         img = Image.open(os.path.join(self.img_path, fname))
         if img.mode == 'L':
             img = img.convert('RGB')
-        den = pd.read_csv(os.path.join(self.gt_path, os.path.splitext(fname)[0] + '.csv'), sep=',', header=None).values
+        den = read_csv(os.path.join(self.gt_path, os.path.splitext(fname)[0] + '.csv'), sep=',', header=None).values
         den = den.astype(np.float32, copy=False)
         den = Image.fromarray(den)
         return img, den
