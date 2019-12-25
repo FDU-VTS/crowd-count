@@ -91,10 +91,10 @@
 
  - you can find more demos in [demo](https://github.com/FDU-VTS/crowd-count/blob/master/demo)
  
-#### Experiments
+## Experiments
 we will add the results soon
 
-#### Thanks for the supports from
+## Thanks for the supports from
 - [C-3-Framework](https://github.com/gjy3035/C-3-Framework)
 - [CSRNet](https://github.com/leeyeehoo/CSRNet-pytorch)
 - [Awesome-Crowd-Counting](https://github.com/gjy3035/Awesome-Crowd-Counting)
