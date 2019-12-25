@@ -15,27 +15,27 @@ img_transform = transforms.Compose([transforms.ToTensor(),
                                     ])
 gt_transform = cc_transforms.LabelEnlarge()
 both_transform = cc_transforms.ComplexCompose([cc_transforms.TransposeFlip()])
-# train_set = ShanghaiTechDataset(mode="train",
-#                                 part="b",
-#                                 img_transform=img_transform,
-#                                 gt_transform=gt_transform,
-#                                 both_transform=both_transform,
-#                                 root="/home/vts/chensongjian/CrowdCount/crowdcount/data/datasets/shtu_dataset_sigma_15")
-# test_set = ShanghaiTechDataset(mode="test",
-#                                part='b',
-#                                img_transform=img_transform,
-#                                root="/home/vts/chensongjian/CrowdCount/crowdcount/data/datasets/shtu_dataset_sigma_15")
-train_set = ShanghaiTechMatlab(mode="train",
+train_set = ShanghaiTechDataset(mode="train",
+                                part="b",
+                                img_transform=img_transform,
+                                gt_transform=gt_transform,
+                                both_transform=both_transform,
+                                root="/home/vts/chensongjian/CrowdCount/crowdcount/data/datasets/shtu_dataset_sigma_15")
+test_set = ShanghaiTechDataset(mode="test",
+                               part='b',
                                img_transform=img_transform,
-                               gt_transform=gt_transform,
-                               main_transform=both_transform,
-                               data_path="/home/vts/chensongjian/CrowdCount/crowdcount/data/datasets/ProcessedData/shanghaitech_part_B")
-test_set = ShanghaiTechMatlab(mode="test",
-                              img_transform=img_transform,
-                              data_path="/home/vts/chensongjian/CrowdCount/crowdcount/data/datasets/ProcessedData/shanghaitech_part_B")
+                               root="/home/vts/chensongjian/CrowdCount/crowdcount/data/datasets/shtu_dataset_sigma_15")
+# train_set = ShanghaiTechMatlab(mode="train",
+#                                img_transform=img_transform,
+#                                gt_transform=gt_transform,
+#                                main_transform=both_transform,
+#                                data_path="/home/vts/chensongjian/CrowdCount/crowdcount/data/datasets/ProcessedData/shanghaitech_part_B")
+# test_set = ShanghaiTechMatlab(mode="test",
+#                               img_transform=img_transform,
+#                               data_path="/home/vts/chensongjian/CrowdCount/crowdcount/data/datasets/ProcessedData/shanghaitech_part_B")
 train_loss = AVGLoss()
 test_loss = EnlargeLoss(100)
-saver = Saver(path="../exp/2019-12-19-shtu_b-resnet101_batch_2_sigma15")
-tb = TensorBoard(path="../runs/2019-12-19-shtu_b-resnet101_batch_2_sigma15")
-train(model, train_set, test_set, train_loss, test_loss, optim="Adam", saver=saver, cuda_num=[2], train_batch=2,
-      test_batch=2, learning_rate=1e-6, epoch_num=500, enlarge_num=100, tensorboard=tb)
+saver = Saver(path="../exp/2019-12-22-main_sigma15_6")
+tb = TensorBoard(path="../runs/2019-12-22-main_sigma15_6")
+train(model, train_set, test_set, train_loss, test_loss, optim="Adam", saver=saver, cuda_num=[3], train_batch=2,
+      test_batch=2, learning_rate=1e-5, epoch_num=500, enlarge_num=100, tensorboard=tb)

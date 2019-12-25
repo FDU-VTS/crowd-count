@@ -7,6 +7,13 @@ Welcome to crowdcount's documentation!
 ======================================
 
 .. toctree::
+    :hidden:
+
+    user_guide
+
+
+.. toctree::
+   :caption: Package Reference
    :maxdepth: 2
    :glob:
 
