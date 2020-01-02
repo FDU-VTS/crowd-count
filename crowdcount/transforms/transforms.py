@@ -152,7 +152,7 @@ class LabelEnlarge(object):
         Returns:
             numpy.ndarray: enlarged density map
         """
-        return den * self.number
+        return np.array(den) * self.number
 
     def __repr__(self):
         return __class__.__name__ + '()'
@@ -177,7 +177,7 @@ class TransposeFlip(object):
             density map (PIL Image or numpy.ndarray): density map to be flipped
 
         Returns:
-            (PIL Image, numpy.ndarray)
+            (PIL Image, PIL Image)
         """
         if not isinstance(den, Image.Image):
             den = Image.fromarray(den)
@@ -186,7 +186,7 @@ class TransposeFlip(object):
         if random.random() > 0.5:
             img = img.transpose(Image.FLIP_LEFT_RIGHT)
             den = den.transpose(Image.FLIP_LEFT_RIGHT)
-        return img, np.asarray(den)
+        return img, den
 
     def __repr__(self):
         return __class__.__name__ + '()'
@@ -222,7 +222,7 @@ class RandomCrop(object):
             density map (PIL Image or numpy.ndarray): density map to be cropped
 
         Returns:
-            (PIL Image, numpy.ndarray)
+            (PIL Image, PIL Image)
         """
         if not isinstance(den, Image.Image):
             den = Image.fromarray(den)
@@ -230,11 +230,11 @@ class RandomCrop(object):
             img = Image.fromarray(img)
         width, height = img.size
         h, w = self.size
-        height_start = int(random.random() * (height - h))
-        width_start = int(random.random() * (width - w))
+        height_start = random.randint(0, height - h)
+        width_start = random.randint(0, width - w)
         img = img.crop((width_start, height_start, width_start + w, height_start + h))
         den = den.crop((width_start, height_start, width_start + w, height_start + h))
-        return img, np.asarray(den)
+        return img, den
 
     def __repr__(self):
         return __class__.__name__ + '()'

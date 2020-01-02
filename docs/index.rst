@@ -6,7 +6,7 @@
 .. include:: ../README.md
 
 .. toctree::
-    :hidden:
+   :caption: User Guide
 
     user_guide
 

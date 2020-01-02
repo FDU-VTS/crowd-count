@@ -7,9 +7,6 @@ import torch.nn.functional as F
 class UNet(nn.Module):
     """Refer from `"Pytorch-UNet..." <https://github.com/milesial/Pytorch-UNet>`_ paper
 
-    Args:
-        pretrain (bool): if True, this model will be pre-trianed on ImageNet
-
     """
     def __init__(self):
         super(UNet, self).__init__()

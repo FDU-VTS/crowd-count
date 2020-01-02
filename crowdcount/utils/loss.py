@@ -113,7 +113,7 @@ class EnlargeLoss:
         batch = len(output)
         for i in range(batch):
             sum_output = torch.sum(output[i] / self.number)
-            sum_gt = torch.sum(ground_truth[i])
+            sum_gt = torch.sum(ground_truth[i] / self.number)
             mae += abs(sum_output - sum_gt)
-            mse += mae ** 2
+            mse += (sum_output - sum_gt) * (sum_output - sum_gt)
         return mae / batch, mse / batch
