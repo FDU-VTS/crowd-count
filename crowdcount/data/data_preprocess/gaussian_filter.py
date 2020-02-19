@@ -29,10 +29,10 @@ def gaussian_filter_density(gt):
     for i, pt in enumerate(pts):
         pt2d = np.zeros(gt.shape, dtype=np.float32)
         pt2d[math.floor(pt[1]), math.floor(pt[0])] = 1.
-        # if gt_count > 1:
-        #     sigma = (distances[i][1]+distances[i][2]+distances[i][3])*0.1
-        # else:
-        #     sigma = np.average(np.array(gt.shape))/2./2. #case: 1 point
-        density += scipy.ndimage.filters.gaussian_filter(pt2d, 15, mode='constant')
+        if gt_count > 1:
+            sigma = (distances[i][1]+distances[i][2]+distances[i][3])*0.1
+        else:
+            sigma = np.average(np.array(gt.shape))/2./2. #case: 1 point
+        density += scipy.ndimage.filters.gaussian_filter(pt2d, sigma, mode='constant')
     print('done.')
     return density

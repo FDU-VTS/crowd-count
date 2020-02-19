@@ -94,3 +94,4 @@ def shtu_mask(root):
             k = gaussian_filter_density(k)
             with h5py.File(img_path.replace('.jpg', '.h5').replace('images', 'ground_truth').replace('IMG_', 'GT_MASK_'), 'w') as hf:
                 hf['density'] = k
+

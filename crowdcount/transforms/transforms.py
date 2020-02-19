@@ -253,7 +253,7 @@ class Scale(object):
         >>> import numpy as np
         >>> img = np.randn(4, 4)
         >>> density_map = np.randn(4, 4)
-        >>> scale = cc_transforms.Scale([2, 2])
+        >>> scale = cc_transforms.Scale((2, 2))
         >>> img, density_map = scale(img, density_map)
     """
     def __init__(self, size, interpolation=Image.BILINEAR):
