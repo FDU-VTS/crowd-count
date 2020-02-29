@@ -4,3 +4,4 @@ from .resnet50 import *
 from .resnet101 import *
 from .unet import *
 from .vgg import *
+from .resnet101_attention import *

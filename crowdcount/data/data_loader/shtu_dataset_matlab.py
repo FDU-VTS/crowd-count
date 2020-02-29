@@ -3,6 +3,7 @@ import os
 from torch.utils import data
 from PIL import Image
 from pandas import read_csv
+import torch
 
 
 class ShanghaiTechMatlab(data.Dataset):

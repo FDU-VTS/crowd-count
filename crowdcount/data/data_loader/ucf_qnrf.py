@@ -1,7 +1,6 @@
 # -*- coding:utf-8 -*-
 # ucf_qnrf dataset
 
-from .crowd_dataset import CrowdDataset
 import glob
 import numpy as np
 import h5py
@@ -10,9 +9,10 @@ import skimage.color
 import skimage.transform
 from tqdm import tqdm
 import os
+from torch.utils.data import Dataset
 
 
-class UCFQNRF(CrowdDataset):
+class UCFQNRF(Dataset):
 
     def __init__(self, mode="train", img_transform=None, gt_transform=None, both_transform=None,
                  root="./crowd_count/data/datasets/UCF-QNRF_ECCV18/"):
@@ -21,6 +21,30 @@ class UCFQNRF(CrowdDataset):
         self.root = os.path.join(root, "Train/") if mode == "train" else os.path.join(root, "Test/")
         self.paths = glob.glob(self.root + "*.jpg")
         self.load_data()
+
+    def __init__(self,
+                 img_transform=None,
+                 gt_transform=None,
+                 both_transform=None):
+        self.img_transform = img_transform
+        self.gt_transform = gt_transform
+        self.both_transform = both_transform
+        self.dataset = []
+
+    def __len__(self):
+        return len(self.dataset)
+
+    def __getitem__(self, item):
+        img, den = self.dataset[item]
+        if self.both_transform is not None:
+            img, den = self.both_transform(img, den)
+        if self.img_transform is not None:
+            img = self.img_transform(img)
+        if self.gt_transform is not None:
+            den = self.gt_transform(den)
+        den = den[np.newaxis, :]
+        print(den.shape)
+        return img, den
 
     def load_data(self):
         print("******************ucf_qnrf loading******************")

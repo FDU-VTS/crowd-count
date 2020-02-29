@@ -11,6 +11,7 @@ def evaluate(model,
              test_set: Dataset,
              test_loss,
              cuda_num=[0],
+             mode="single",
              test_batch=1,
              num_worker=8,
              ):
@@ -20,6 +21,8 @@ def evaluate(model,
         test_set (torch.utils.data.Dataset or object): test dataset constructed into torch.utils.data.DataLoader.
         test_set (torch.utils.data.Dataset or object): test dataset constructed into torch.utils.data.DataLoader.
         cuda_num (list, optional): CUDA devices(default: [0]).
+        mode (string, optional): single-gpu or multi-gpu, if saved in multi-gpu mode,
+            please load in multi-gpu mode(default: "single").
         test_batch (int, optional): test batch(default: 1).
         num_worker (int, optional): how many subprocesses to use for data loading.
             0 means that the data will be loaded in the main process(default: 8).
@@ -28,6 +31,8 @@ def evaluate(model,
         cuda_num = [0]
     device = "cuda: {0}".format(cuda_num[0]) if torch.cuda.is_available() else "cpu"
     model = model.to(device)
+    if mode is "multi":
+        model = torch.nn.DataParallel(model, device_ids=cuda_num)
     model.load_state_dict(torch.load(model_path))
     test_loader = DataLoader(dataset=test_set,
                              batch_size=test_batch,

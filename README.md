@@ -12,42 +12,42 @@
 
 ## Install
  - `pip install crowdcount --user --upgrade`
- 
+
 ## Introduction
 
 #### Crowd counting task:
  - estimate the number of crowd
  - ![crowd counting demo](img/demo.png)
- 
+
 #### User guide:
  - models
- 
-        from crowdcount.models import * 
+
+        from crowdcount.models import *
         # crowd counting models includes csr_net, mcnn, resnet50, resnet101, unet, vgg
  - transforms
- 
+
         import crowdcount.transforms as cc_transforms
         # transforms
  - data_loader
- 
+
         from crowdcount.data.data_loader import *
         # includes ShanghaiTech, UCF_QNRF, UCF_CC_50, Fudan-ShanghaiTech temporarily
  - data_preprocess
- 
+
         from crowdcount.data.data_preprocess import *
         # gaussian preprocess for datasets
-        
+
  - utils
- 
+
         from crowdcount.utils import *
         # includes loss functions, optimizers, tensorboard and save function
- 
+
  - engine
- 
+
         from crowdcount.engine import train
         # start to train
         train(*args, **kwargs)
-    
+
  - More details in [document](https://crowd-count.readthedocs.io/en/latest/)
 
 #### Demo
@@ -57,7 +57,7 @@
     from crowdcount.utils import *
     import crowdcount.transforms as cc_transforms
     import torchvision.transforms as transforms
-    
+
     # init model
     model = Res101()
     # init transforms
@@ -90,7 +90,7 @@
           test_batch=2, learning_rate=1e-5, epoch_num=500, enlarge_num=100, tensorboard=tb)
 
  - you can find more demos in [demo](https://github.com/FDU-VTS/crowd-count/blob/master/demo)
- 
+
 ## Experiments
 we will add the results soon
 

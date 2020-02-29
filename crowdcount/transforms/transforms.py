@@ -7,7 +7,7 @@ import numbers
 
 __all__ = ["SingleCompose", "ComplexCompose", "ResizeShrink",
            "LabelEnlarge", "TransposeFlip", "RandomCrop",
-           "Scale"]
+           "Scale", "AutoRotation"]
 
 
 class SingleCompose(object):
@@ -292,3 +292,28 @@ class Scale(object):
 
     def __repr__(self):
         return __class__.__name__ + '()'
+
+
+class AutoRotation(object):
+    ''' In order to fit with Sclae function. This function rotate images to the shape of (h, w), where h < w.
+
+    '''
+
+    def __call__(self, img, den):
+        """
+        Args:
+            image (PIL Image or numpy.ndarray): image to be cropped
+            density map (PIL Image or numpy.ndarray): density map to be cropped
+
+        Returns:
+            (PIL Image, PIL Image)
+        """
+        if not isinstance(den, Image.Image):
+            den = Image.fromarray(den)
+        if not isinstance(img, Image.Image):
+            img = Image.fromarray(img)
+        w, h = img.size
+        if w < h:
+            img.rotate(90)
+            den.rotate(90)
+        return img, den
