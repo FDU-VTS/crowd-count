@@ -30,7 +30,6 @@ class ShanghaiTechDataset(Dataset):
                  gt_transform=None,
                  both_transform=None,
                  root="../crowd_count/data/datasets/shtu_dataset/"):
-        super().__init__(img_transform, gt_transform, both_transform)
         self.root = {
             "a": {
                 "train": os.path.join(root, "part_A_final/train_data/"),
@@ -43,17 +42,12 @@ class ShanghaiTechDataset(Dataset):
         }[part][mode]
         self.mode = mode
         self.part = part
-        self.paths = glob.glob(self.root + "images/*.jpg")
-        self.load_data()
-
-    def __init__(self,
-                 img_transform=None,
-                 gt_transform=None,
-                 both_transform=None):
         self.img_transform = img_transform
         self.gt_transform = gt_transform
         self.both_transform = both_transform
+        self.paths = glob.glob(self.root + "images/*.jpg")
         self.dataset = []
+        self.load_data()
 
     def __len__(self):
         return len(self.dataset)

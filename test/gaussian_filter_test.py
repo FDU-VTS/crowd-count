@@ -5,7 +5,6 @@ from scipy import io
 import scipy.ndimage
 import skimage.io
 sys.path.append("../")
-from crowdcount.data.data_preprocess import gaussian_filter_density
 
 root1 = "/home/vts/chensongjian/CrowdCount/crowdcount/data/datasets/ProcessedData/shanghaitech_part_B/train/den/1.csv"
 root2 = "/home/vts/chensongjian/CrowdCount/crowdcount/data/datasets/shtu_dataset/part_B_final/train_data/ground_truth/GT_IMG_1.mat"
@@ -27,6 +26,6 @@ for i in range(0, len(gt)):
         k[int(gt[i][1]), int(gt[i][0])] = 1
 print("gt: ", k.shape)
 
-den2 = scipy.ndimage.gaussian_filter(k, sigma=15, mode="constant")
+den2 = scipy.ndimage.gaussian_filter(k, sigma=15, mode="nearest")
 print("den2: ", den2.shape)
-print("sum: ", np.sum(den1), np.sum(k))
+print("sum: ", np.sum(den2), np.sum(den1), np.sum(k))

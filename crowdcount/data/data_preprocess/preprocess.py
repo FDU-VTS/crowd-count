@@ -1,97 +1,75 @@
 # -*- coding:utf-8 -*-
 import os
 import glob
-import skimage.io
+from PIL import Image
 from scipy import io
 import h5py
 import numpy as np
-from .gaussian_filter import gaussian_filter_density
+from .gaussian_filter import adaptive_gaussian, uniform_gaussian
 
 
-def shtu(root):
-    part_a_train = os.path.join(root, 'part_A_final/train_data', 'images')
-    part_a_test = os.path.join(root, 'part_A_final/test_data', 'images')
-    part_b_train = os.path.join(root, 'part_B_final/train_data', 'images')
-    part_b_test = os.path.join(root, 'part_B_final/test_data', 'images')
-    path_sets = [part_a_train, part_a_test, part_b_train, part_b_test]
+class PreProcess:
+    """generate density map
 
-    for path in path_sets:
-        for img_path in glob.glob(os.path.join(path, '*.jpg')):
-            print(img_path)
-            mat = io.loadmat(
-                img_path.replace('.jpg', '.mat').replace('images', 'ground_truth').replace('IMG_', 'GT_IMG_'))
-            img = skimage.io.imread(img_path)
-            k = np.zeros((img.shape[0], img.shape[1]))
-            gt = mat["image_info"][0, 0][0, 0][0]
-            for i in range(0, len(gt)):
-                if int(gt[i][1]) < img.shape[0] and int(gt[i][0]) < img.shape[1]:
-                    k[int(gt[i][1]), int(gt[i][0])] = 1
-            k = gaussian_filter_density(k)
-            for i in range(4):
-                pass
-            with h5py.File(img_path.replace('.jpg', '.h5').replace('images', 'ground_truth'), 'w') as hf:
-                hf['density'] = k
+    Args:
+        root(str) :the root of dataset, only support shtu_a, shtu_b, ucf_qnrf and ucf_cc_50 now.
+            For ShanghaiTech part A and part B, the root should be upper dir over "part_A_final" or
+            "part_B_final". And for UCF QNRF and UCF CC 50, the root should be upper dir over "Train" and "Test"
+        name(str, optional): the name of dataset, must be in ["shtu_a", "shtu_b", "ucf_qnrf", "ucf_cc"]. default: shtu_a
 
+    """
+    def __init__(self, root, name="shtu_a"):
+        self.root = root
+        self.name = name
+        if self.name not in ["shtu_a", "shtu_b", "ucf_qnrf", "ucf_cc"]:
+            print("the name should be 'shtu_a', 'shtu_b', 'ucf_qnrf' or 'ucf_cc'")
+            raise ValueError
+        self.path_set = {
+            "shtu_a": [
+                os.path.join(root, 'part_A_final/train_data', 'images'),
+                os.path.join(root, 'part_A_final/test_data', 'images')
+            ],
+            "shtu_b": [
+                os.path.join(root, 'part_B_final/train_data', 'images'),
+                os.path.join(root, 'part_B_final/test_data', 'images')
+            ],
+            "ucf_qnrf": [
+                os.path.join(root, 'Train'),
+                os.path.join(root, 'Test')
+            ],
+            "ucf_cc": [root]
+        }[name]
 
-def ucf_qnrf(root):
-    train_path = os.path.join(root, 'Train')
-    test_path = os.path.join(root, 'Test')
-    path_sets = [train_path]
+    def process(self, mode="uniform", sigma=4, radius=7):
+        """generate density map and save.
 
-    for path in path_sets:
-        for img_path in glob.glob(os.path.join(path, '*.jpg')):
-            print(img_path)
-            mat = io.loadmat(img_path.replace('.jpg', '_ann.mat'))
-            img = skimage.io.imread(img_path, plugin='matplotlib')
-            k = np.zeros((img.shape[0], img.shape[1]))
-            gt = mat["annPoints"]
-            for i in range(0, len(gt)):
-                if int(gt[i][1]) < img.shape[0] and int(gt[i][0]) < img.shape[1]:
-                    k[int(gt[i][1]), int(gt[i][0])] = 1
-            k = gaussian_filter_density(k)
-            with h5py.File(img_path.replace('.jpg', '.h5'), 'a') as hf:
-                hf['density'] = k
-
-
-def ucf_cc(root):
-    for i, img_path in enumerate(glob.glob(os.path.join(root, '*.jpg'))):
-        print(str(i) + " / 50")
-        mat = io.loadmat(img_path.replace('.jpg', '_ann.mat'))
-        img = skimage.io.imread(img_path, plugin='matplotlib')
-        k = np.zeros((img.shape[0], img.shape[1]))
-        gt = mat["annPoints"]
-        for i in range(0, len(gt)):
-            if int(gt[i][1]) < img.shape[0] and int(gt[i][0]) < img.shape[1]:
-                k[int(gt[i][1]), int(gt[i][0])] = 1
-        k = gaussian_filter_density(k)
-        with h5py.File(img_path.replace('.jpg', '.h5'), 'w') as hf:
-            hf['density'] = k
-
-
-def shtu_mask(root):
-    # now generate the ShanghaiA's ground truth
-    part_a_train = os.path.join(root, 'part_A_final/train_data', 'images')
-    part_a_test = os.path.join(root, 'part_A_final/test_data', 'images')
-    part_b_train = os.path.join(root, 'part_B_final/train_data', 'images')
-    part_b_test = os.path.join(root, 'part_B_final/test_data', 'images')
-    path_sets = [part_a_train, part_a_test, part_b_train, part_b_test]
-
-    for path in path_sets:
-        img_paths = glob.glob(os.path.join(path, '*.jpg'))
-        for img_path in img_paths:
-            mat = io.loadmat(img_path.replace('.jpg', '.mat').replace('images', 'ground_truth').replace('IMG_', 'GT_IMG_'))
-            mask_path = img_path.replace('images', 'masks').replace('jpg', 'h5')
-            with h5py.File(mask_path) as mask_file:
-                mask = np.asarray(mask_file['mask'])
-            img = skimage.io.imread(img_path)
-            k = np.zeros((img.shape[0], img.shape[1]))
-            gt = mat["image_info"][0, 0][0, 0][0]
-            for x, y in gt:
-                x = int(round(x))
-                y = int(round(y))
-                if x < img.shape[0] and y < img.shape[1] and mask[x, y] == 0:
-                    k[y, x] = 1
-            k = gaussian_filter_density(k)
-            with h5py.File(img_path.replace('.jpg', '.h5').replace('images', 'ground_truth').replace('IMG_', 'GT_MASK_'), 'w') as hf:
-                hf['density'] = k
-
+        Args:
+            mode(str, optional): the way to generate gaussian filter. "uniform": uniform sigma and radius of filter, the
+                suggestion from C-3-Framework is sigma 15 and radius 7 as the default. "adaptive_kdtree": use adaptive
+                gaussian kernel with kdtree. "adaptive_voronio": use adaptive gaussian kernel with voronio map. defalut:
+                uniform.
+            sigma(int, optional): the sigma of gaussian filter. default: 4.
+            radius(int, optional): the radius of gaussian area. default: 7.
+        """
+        for path in self.path_set:
+            for img_path in glob.glob(os.path.join(path, '*.jpg')):
+                img = np.asarray(Image.open(img_path))
+                if self.name in ["shtu_a", "shtu_b"]:
+                    mat = io.loadmat(img_path.replace('.jpg', '.mat').replace('images/IMG_', 'ground_truth/GT_IMG_'))
+                    gt = mat["image_info"][0, 0][0, 0][0]
+                    save_dir = img_path.replace('.jpg', '.h5').replace('images', 'ground_truth')
+                else:
+                    mat = io.loadmat(img_path.replace('.jpg', '_ann.mat'))
+                    gt = mat["annPoints"]
+                    save_dir = img_path.replace('.jpg', '.h5')
+                h, w = img.shape[:2]
+                density = np.zeros((h, w))
+                for y, x in gt:
+                    if y < h and x < w:
+                        density[y, x] = 1
+                if mode == "uniform":
+                    density = uniform_gaussian(density, sigma=sigma, radius=radius)
+                elif mode == "adaptive":
+                    density = adaptive_gaussian(density, mode=mode)
+                with h5py.File(save_dir, 'w') as hf:
+                    hf['density'] = density

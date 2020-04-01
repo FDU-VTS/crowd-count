@@ -8,14 +8,17 @@ import torch
 
 
 class Compose:
+    """Compose several loss functions
+
+    """
 
     def __init__(self, loss_functions):
         self.loss_functions = loss_functions
 
     def __call__(self, output, ground_truth):
         loss = 0.0
-        for loss_func in self.loss_functions:
-            loss += loss_func(output, ground_truth)
+        for coefficient, loss_func in self.loss_functions:
+            loss += coefficient * loss_func(output, ground_truth)
         return loss
 
 

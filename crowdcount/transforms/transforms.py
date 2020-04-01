@@ -180,7 +180,7 @@ class TransposeFlip(object):
             (PIL Image, PIL Image)
         """
         if not isinstance(den, Image.Image):
-            den = Image.fromarray(den)
+                den = Image.fromarray(den)
         if not isinstance(img, Image.Image):
             img = Image.fromarray(img)
         if random.random() > 0.5:
