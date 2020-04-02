@@ -59,7 +59,7 @@ copyright = '2019, Fudan-VTS'
 author = 'Fudan-VTS'
 
 # The full version, including alpha/beta/rc tags
-release = '0.0.2'
+release = '0.1.2'
 
 # The suffix(es) of source filenames.
 # You can specify multiple suffix as a list of string:
