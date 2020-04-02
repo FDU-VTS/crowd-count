@@ -29,9 +29,9 @@ test_set = UCFQNRF(mode="test",
                    gt_transform=gt_transform,
                    both_transform=both_transform,
                    root="../crowdcount/data/datasets/UCF-QNRF_ECCV18/")
-train_loss = loss.Compose([[1, AVGLoss()], [1, RankLoss(100)]])
+train_loss = AVGLoss()
 test_loss = EnlargeLoss(100)
-saver = Saver(mode="remain", path="../exp/03-02-ucf_qnrf-batch2-rank-2")
-tb = TensorBoard(path="../runs/03-02-ucf_qnrf-batch2-rank-2")
-train(model, train_set, test_set, train_loss, test_loss, optim="Adam", saver=saver, cuda_num=[3],
-      train_batch=2, test_batch=1, learning_rate=1e-5, epoch_num=250, enlarge_num=100, scheduler_flag=True)
+saver = Saver(mode="remain", path="../exp/04-02-ucf-qnrf")
+tb = TensorBoard(path="../runs/04-02-ucf-qnrf")
+train(model, train_set, test_set, train_loss, test_loss, optim="Adam", saver=saver, cuda_num=[2, 3],
+      train_batch=4, test_batch=1, learning_rate=1e-5, epoch_num=250, enlarge_num=100, scheduler_flag=True)

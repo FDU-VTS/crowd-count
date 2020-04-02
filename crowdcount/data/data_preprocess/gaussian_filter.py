@@ -61,8 +61,7 @@ def uniform_gaussian(gt, sigma=15, radius=4):
     for point_h, point_w in points:
         if point_h > h or point_w > w or point_h < 0 or point_w < 0:
             continue
-        h1, h2, w1, w2 = max(0, point_h - radius), min(point_h + radius + 1, h), \
-                         max(0, point_w - radius), min(point_w + radius + 1, w)
+        h1, h2, w1, w2 = max(0, point_h - radius), min(point_h + radius + 1, h), max(0, point_w - radius), min(point_w + radius + 1, w)
         window = np.zeros((h2 - h1, w2 - w1))
         window[point_h - h1, point_w - w1] = 1
         density[h1: h2, w1: w2] += gaussian_filter(window, sigma=sigma)

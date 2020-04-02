@@ -29,7 +29,7 @@ test_set = ShanghaiTechDataset(mode="test",
                                root="/home/vts/chensongjian/CrowdCount/crowdcount/data/datasets/shtu_dataset")
 train_loss = AVGLoss()
 test_loss = EnlargeLoss(100)
-saver = Saver(path="../exp/2019-04-01-shtu_b")
-tb = TensorBoard(path="../runs/2019-04-01-shtu_b")
+saver = Saver(path="../exp/2019-04-02-shtu_b")
+tb = TensorBoard(path="../runs/2019-04-02-shtu_b")
 train(model, train_set, test_set, train_loss, test_loss, optim="Adam", saver=saver, cuda_num=[0, 1], train_batch=4,
       test_batch=1, learning_rate=1e-5, epoch_num=1000, enlarge_num=100, tensorboard=tb)

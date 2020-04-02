@@ -6,6 +6,8 @@ from scipy import io
 import h5py
 import numpy as np
 from .gaussian_filter import adaptive_gaussian, uniform_gaussian
+from tqdm import tqdm
+import math
 
 
 class PreProcess:
@@ -51,8 +53,11 @@ class PreProcess:
             sigma(int, optional): the sigma of gaussian filter. default: 4.
             radius(int, optional): the radius of gaussian area. default: 7.
         """
+        print("begin to preprocess...")
         for path in self.path_set:
-            for img_path in glob.glob(os.path.join(path, '*.jpg')):
+            img_dir = glob.glob(os.path.join(path, '*.jpg'))
+            progress_bar = tqdm(total=len(img_dir))
+            for img_path in img_dir:
                 img = np.asarray(Image.open(img_path))
                 if self.name in ["shtu_a", "shtu_b"]:
                     mat = io.loadmat(img_path.replace('.jpg', '.mat').replace('images/IMG_', 'ground_truth/GT_IMG_'))
@@ -64,12 +69,17 @@ class PreProcess:
                     save_dir = img_path.replace('.jpg', '.h5')
                 h, w = img.shape[:2]
                 density = np.zeros((h, w))
-                for y, x in gt:
+                for x, y in gt:
                     if y < h and x < w:
-                        density[y, x] = 1
+                        density[math.floor(y), math.floor(x)] = 1
                 if mode == "uniform":
                     density = uniform_gaussian(density, sigma=sigma, radius=radius)
                 elif mode == "adaptive":
                     density = adaptive_gaussian(density, mode=mode)
-                with h5py.File(save_dir, 'w') as hf:
-                    hf['density'] = density
+                with h5py.File(save_dir, 'r+') as hf:
+                    if 'density' in hf:
+                        hf['density'][...] = density
+                    else:
+                        hf['density'] = density
+                progress_bar.update(1)
+            progress_bar.close()

@@ -1,5 +1,6 @@
 import sys
 sys.path.append("../")
-from crowdcount.data.data_preprocess import preprocess
+from crowdcount.data.data_preprocess import PreProcess
 
-preprocess.shtu_b("/home/vts/chensongjian/CrowdCount/crowdcount/data/datasets/shtu_dataset")
+PreProcess(root="/home/vts/chensongjian/CrowdCount/crowdcount/data/datasets/UCF-QNRF_ECCV18", name="ucf_qnrf").process()
+# PreProcess(root="/home/vts/chensongjian/CrowdCount/crowdcount/data/datasets/shtu_dataset", name="shtu_b").process()
