@@ -1,0 +1,8 @@
+DATASET: "ShanghaiTech_B"
+MODEL:
+  NAME: "res50"
+  PRETRAIN: True
+TRAIN:
+  DATA_PATH: "/home/vts/chensongjian/CrowdCount/crowdcount/data/datasets/shtu_dataset"
+TEST:
+  DATA_PATH: "/home/vts/chensongjian/CrowdCount/crowdcount/data/datasets/shtu_dataset"

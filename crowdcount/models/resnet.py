@@ -1,22 +1,31 @@
 from torchvision import models
-from .network import ConvUnit
 import torch.nn as nn
-# borrowed from https://github.com/gjy3035/C-3-Framework
 
 
-class Res50(nn.Module):
+def conv3x3(in_planes, out_planes, stride=1, groups=1, dilation=1):
+    """3x3 convolution with padding"""
+    return nn.Conv2d(in_planes, out_planes, kernel_size=3, stride=stride,
+                     padding=dilation, groups=groups, bias=False, dilation=dilation)
+
+
+def conv1x1(in_planes, out_planes, stride=1):
+    """1x1 convolution"""
+    return nn.Conv2d(in_planes, out_planes, kernel_size=1, stride=stride, bias=False)
+
+
+class ResNet(nn.Module):
     """Refer from `"C-3-Framework..." <https://github.com/gjy3035/C-3-Framework>`_ paper
 
     Args:
         pretrain (bool): if True, this model will be pre-trianed on ImageNet
 
     """
-    def __init__(self, pretrained=True):
-        super(Res50, self).__init__()
-        self.de_pred = nn.Sequential(ConvUnit(1024, 128, 1),
-                                     ConvUnit(128, 1, 1))
+    def __init__(self, cfg):
+        super(ResNet, self).__init__()
+        self.de_pred = nn.Sequential(conv3x3(1024, 128, 1),
+                                     conv3x3(128, 1, 1))
         self._initialize_weights()
-        res = models.resnet50(pretrained=pretrained)
+        res = models.resnet50(pretrained=cfg.MODEL.PRETRAIN)
         self.frontend = nn.Sequential(
             res.conv1, res.bn1, res.relu, res.maxpool, res.layer1, res.layer2
         )
@@ -90,5 +99,3 @@ class Bottleneck(nn.Module):
         out += residual
         out = self.relu(out)
         return out
-
-
